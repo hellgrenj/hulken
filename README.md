@@ -71,7 +71,7 @@ The requestsFile is a json file and looks like this.
 ```
 POSTs require a payload.
 
-If you are running an express 3 application and thinks hand crafting a requests file sounds like a drag check out ***hulken_informant_express3***.
+If you are running an express 3 application and thinks hand crafting a requests file sounds like a drag check out ***[hulken_informant_express3](https://github.com/hellgrenj/hulken_informant_express3)***.
 If you run something else but still want to automate the creation of the requestsFile please make an "hulken_informant_x" out of it and send me the link =)
 
 ##Usage (as a command line tool)
