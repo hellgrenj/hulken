@@ -1,0 +1,14 @@
+{
+  "targetUrl" : "http://yourapp.com",
+  "timesToRunEachRequest": 3,
+  "requestFilePath": "../path/to/hulkenRequests.json",
+  "tokensSkippingRequest": [":"],
+  "requestsToSkip": ["/logout","/some/special/case"],
+  "loginRequired" : true,
+  "loginUrl" : "/login",
+  "username" : "targetApplicationUserName",
+  "password" : "targetApplicationPassword",
+  "loginResponseExpectedText" : "Welcome!",
+  "happyTimeLimit" : 7,
+  "happyTimeLimitLocalhost" : 10
+}

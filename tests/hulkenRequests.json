@@ -1,0 +1,16 @@
+[{
+  "method": "get",
+  "path": "/someother",
+  "expectedTextToExist": "you have reached someother page"
+}, {
+  "method": "get",
+  "path": "/",
+  "expectedTextToExist": "you have reached the test startpage"
+}, {
+  "method": "post",
+  "path": "/",
+  "expectedTextToExist": "you have sent me a POST request",
+  "payload": {
+    "foo": "bar"
+  }
+}]
