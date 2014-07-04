@@ -95,5 +95,5 @@ The options file is a simple json and looks something like this.
 ##Tests
 `npm test`
 
-  ##License
+##License
 Released under the MIT license. Copyright (c) 2014 Johan Hellgren.
