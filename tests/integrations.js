@@ -4,17 +4,21 @@ var testWebServer = require('./testWebServer');
 
 var testStart;
 var testStop;
+var numberOfHulkenAgentsInTest = 50;
 
 console.log('..::Hulken Integration tests::..'.bold.inverse.cyan);
 console.log('');
 var runHulkenTestSuite = function(){
   console.log('.. calling on hulken'.bold.inverse.cyan);
   console.log('');
+
+
   var hulken = require('../hulken.js');
   var hulken_options = {
     targetUrl: 'http://localhost:5656',
     requestsFilePath: './tests/hulkenRequests.json',
-    timesToRunEachRequest: 1
+    timesToRunEachRequest: 1,
+    numberOfHulkenAgents: numberOfHulkenAgentsInTest
   };
   testStart = Date.now();
   hulken.run(function(stats){
@@ -39,14 +43,16 @@ function verify(stats){
     expect(stats.reqsPerSecond).to.be.ok();
     expect(stats).to.have.property('randomRequestWaitTime');
     expect(stats.randomRequestWaitTime).to.be.ok();
+    expect(stats).to.have.property('numberOfHulkenAgents');
+    expect(stats.numberOfHulkenAgents).to.be.ok();
 
     expect(stats.numberOfConcurrentRequests).to.equal(testWebServer.getReqsReceived());
-    //since timesToRunEachRequest is set to 1
-    expect(stats.numberOfUniqueRequests).to.equal(testWebServer.getReqsReceived());
 
-    expect(testWebServer.getStartPageReqsReceived()).to.equal(1);
-    expect(testWebServer.getSomeotherPageReqsReceived()).to.equal(1);
-    expect(testWebServer.getPostsToStartPage()).to.equal(1);
+    //since timesToRunEachRequest is set to 1
+    expect(stats.numberOfUniqueRequests).to.equal(testWebServer.getReqsReceived() / numberOfHulkenAgentsInTest);
+    expect(testWebServer.getStartPageReqsReceived()).to.equal(numberOfHulkenAgentsInTest);
+    expect(testWebServer.getSomeotherPageReqsReceived()).to.equal(numberOfHulkenAgentsInTest);
+    expect(testWebServer.getPostsToStartPage()).to.equal(numberOfHulkenAgentsInTest);
 
     var postValues = testWebServer.getPostVars();
     expect(postValues).to.have.property('foo');
@@ -57,7 +63,7 @@ function verify(stats){
     passTest();
   }catch(expectError){
     console.log('.. Integration tests failed! =('.bold.inverse.red);
-    console.log(expectError.toString().bold.inverse.red);
+    console.log(expectError.stack.toString().bold.inverse.red);
     console.log('');
     process.exit(code = 1);
   }

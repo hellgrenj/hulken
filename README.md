@@ -35,7 +35,8 @@ hulken.run(function(stats){
 >**setting name** (default value) | explanation  
 
 * **targetUrl** ("http://localhost") | url to application under test  
-* **timesToRunEachRequest** (1) | number of times to exeute each request  
+* **numberOfHulkenAgents** (1) | number of agents sending requests
+* **timesToRunEachRequest** (1) | number of times to execute each request per agent  
 * **requestsFilePath** ("./hulkenRequests.json") | path to requestsFile (including file name)  
 * **tokensSkippingRequest** ([':']) | requests with urls containing one or more of these chars gets ignored  
 * **requestsToSkip** (['/logout', 'signoff']) | requests with urls matching one of the provided urls gets ignored
