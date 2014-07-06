@@ -47,8 +47,7 @@ hulken.run(function(stats){
 * **passwordPostName** ("password") | the password post name
 * **loginUrl** ("/login") | the url to post to when logging in
 * **loginResponseExpectedText** ("") | a text which hulken searches for in the response to the login post (if non is provided hulken will consider http 200 OK good enough)
-* **happyTimeLimit** (5) | maximum number of seconds hulken thinks is ok for the whole test
-* **happyTimeLimitLocalhost** (10) | the same as happyTimeLimit but if the targetUrl contains 'localhost'
+* **happyTimeLimit** (10) | max test suite duration (in seconds). If the whole test takes longer than this value hulken gets angry.
 
 The requestsFile is a json file and looks like this.  
 ```
@@ -95,6 +94,9 @@ The options file is a simple json and looks something like this.
 
 ##Tests
 `npm test`
+
+##Blog posts
+[Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##License
 Released under the MIT license. Copyright (c) 2014 Johan Hellgren.

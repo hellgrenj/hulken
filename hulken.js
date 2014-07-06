@@ -23,6 +23,7 @@ hulken.getAvgResponseTime = function() {
   }
   return (totalRespTime / hulken.requests.length);
 }
+
 function setDefaults() {
   hulken.settings.targetUrl = "http://localhost";
   hulken.settings.timesToRunEachRequest = 1;
@@ -36,8 +37,7 @@ function setDefaults() {
   hulken.settings.passwordPostName = "password";
   hulken.settings.loginUrl = "/login";
   hulken.settings.loginResponseExpectedText = "";
-  hulken.settings.happyTimeLimit = 5;
-  hulken.settings.happyTimeLimitLocalhost = 10;
+  hulken.settings.happyTimeLimit = 10;
   hulken.settings.numberOfHulkenAgents = 1;
 }
 
@@ -105,12 +105,14 @@ function overrideDefaultsWithOptions(options, next) {
     }
     if (options.requestsToSkip) {
       hulken.settings.requestsToSkip = options.requestsToSkip;
-      console.log('requests to skip set to '.cyan + hulken.settings.requestsToSkip.toString()
+      console.log('requests to skip set to '.cyan + hulken.settings.requestsToSkip
+        .toString()
         .bold.magenta);
     }
     if (options.loginRequired !== null && options.loginRequired !== undefined) {
       hulken.settings.loginRequired = options.loginRequired;
-      console.log('loginRequired set to '.cyan + hulken.settings.loginRequired.toString().bold
+      console.log('loginRequired set to '.cyan + hulken.settings.loginRequired.toString()
+        .bold
         .magenta);
     }
     if (options.username) {
@@ -134,13 +136,9 @@ function overrideDefaultsWithOptions(options, next) {
     }
     if (options.happyTimeLimit) {
       hulken.settings.happyTimeLimit = options.happyTimeLimit;
-      console.log('happyTimeLimit set to '.cyan + hulken.settings.happyTimeLimit.toString().bold
+      console.log('happyTimeLimit set to '.cyan + hulken.settings.happyTimeLimit
+        .toString().bold
         .magenta);
-    }
-    if (options.happyTimeLimitLocalhost) {
-      hulken.settings.happyTimeLimitLocalhost = options.happyTimeLimitLocalhost;
-      console.log('happyTimeLimitLocalhost set to '.cyan +
-        hulken.settings.happyTimeLimitLocalhost.toString().bold.magenta);
     }
     if (options.usernamePostName) {
       hulken.settings.usernamePostName = options.usernamePostName;
@@ -173,7 +171,8 @@ function authenticateAgentsRecursive(index) {
   loginPayload[hulken.settings.passwordPostName] = hulken.settings.password;
 
   if (hulken.settings.loginRequired) {
-    hulkenAgent.post(hulken.settings.targetUrl + hulken.settings.loginUrl).send(loginPayload).end(function(res) {
+    hulkenAgent.post(hulken.settings.targetUrl + hulken.settings.loginUrl).send(
+      loginPayload).end(function(res) {
       try {
         expect(res).to.exist;
         expect(res.status).to.equal(200);
@@ -273,13 +272,15 @@ function handleRequestResult(res, reqStart, request, agent) {
   var reqResponseTimeInSeconds = (
     reqResponseTime / 1000);
   if (reqResponseTimeInSeconds > 3) {
-  console.log((request.method.toUpperCase() + ' ' + request.path +
-          ' (by agent ' + agent.id + '/' + hulken.agents.length + ') responded in ' +
-          reqResponseTimeInSeconds.toString().red + ' seconds')
-        .toString().grey);
+    console.log((request.method.toUpperCase() + ' ' + request.path +
+        ' (by agent ' + agent.id + '/' + hulken.agents.length +
+        ') responded in ' +
+        reqResponseTimeInSeconds.toString().red + ' seconds')
+      .toString().grey);
   } else {
     console.log((request.method.toUpperCase() + ' ' + request.path +
-        ' (by agent ' + agent.id + '/' + hulken.agents.length + ') responded in ' +
+        ' (by agent ' + agent.id + '/' + hulken.agents.length +
+        ') responded in ' +
         reqResponseTimeInSeconds.toString().green + ' seconds')
       .toString().grey);
   }
@@ -353,32 +354,16 @@ function finsish(hulkenExecutionTime, stats) {
   console.log('random request wait time (in seconds)' + ' 1-6'.magenta);
   console.log('******************************************'.bold.cyan);
 
-  var isLocalhost = (hulken.settings.targetUrl.indexOf("localhost") > -1) ||
-      (hulken.settings.targetUrl.indexOf("127.0.0.1") > -1);
-
-  if (isLocalhost) {
-    if (hulkenExecutionTime < hulken.settings.happyTimeLimitLocalhost) {
-      console.log('');
-      console.log('HULKEN THINKS RESULT OK FOR LOCALHOST'.bold.green);
-      console.log('');
-      hulken.happyCallback(stats);
-    } else {
-      console.log('.... BAD RESULT, EVEN FOR LOCALHOST! ...'.bold.green +
-        ' HULKEN ANGRY!'.bold.red);
-      hulken.angryCallback(stats);
-    }
+  if (hulkenExecutionTime < hulken.settings.happyTimeLimit) {
+    console.log('');
+    console.log('HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!'
+      .bold
+      .green);
+    console.log('');
+    hulken.happyCallback(stats);
   } else {
-    if (hulkenExecutionTime < hulken.settings.happyTimeLimit) {
-      console.log('');
-      console.log('HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!'
-        .bold
-        .green);
-      console.log('');
-      hulken.happyCallback(stats);
-    } else {
-      console.log('.... BAD RESULT...'.green + ' HULKEN ANGRY'.bold.red);
-      hulken.angryCallback(stats);
-    }
+    console.log('.... BAD RESULT... HULKEN ANGRY!'.bold.red);
+    hulken.angryCallback(stats);
   }
 }
 

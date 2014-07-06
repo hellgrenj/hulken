@@ -18,7 +18,8 @@ var runHulkenTestSuite = function(){
     targetUrl: 'http://127.0.0.1:5656',
     requestsFilePath: './tests/hulkenRequests.json',
     timesToRunEachRequest: 1,
-    numberOfHulkenAgents: numberOfHulkenAgentsInTest
+    numberOfHulkenAgents: numberOfHulkenAgentsInTest,
+    happyTimeLimit: 10
   };
   testStart = Date.now();
   hulken.run(function(stats){
