@@ -86,7 +86,7 @@ The options file is a simple json and looks something like this.
 ```
 {
 “targetUrl” : “http://yourapp.com”,
-“requestFilePath”: “../path/to/hulkenRequests.json”
+“requestsFilePath”: “../path/to/hulkenRequests.json”
 }
 ```  
 **You can set the same settings in this file as when you require hulken in your code and passing in an options object.**  
