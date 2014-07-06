@@ -7,51 +7,59 @@ var expect = require('expect.js');
 var async = require('async');
 var colors = require('colors');
 
-// globals to this module
+
 var hulken = this;
-var hulkenAgents = [];
+hulken.init = function() {
+  hulken.settings = {};
+  hulken.agents = [];
+  hulken.requests = [];
+  hulken.executedRequests = [];
+  setDefaults();
+}
+hulken.getAvgResponseTime = function() {
+  var totalRespTime = 0;
+  for (var i = 0; i < hulken.executedRequests.length; i++) {
+    totalRespTime += hulken.executedRequests[i].responseTime;
+  }
+  return (totalRespTime / hulken.requests.length);
+}
+function setDefaults() {
+  hulken.settings.targetUrl = "http://localhost";
+  hulken.settings.timesToRunEachRequest = 1;
+  hulken.settings.requestsFilePath = "./hulkenRequests.json";
+  hulken.settings.tokensSkippingRequest = [':'];
+  hulken.settings.requestsToSkip = ['/logout', 'signoff'];
+  hulken.settings.loginRequired = false;
+  hulken.settings.username = "";
+  hulken.settings.password = "";
+  hulken.settings.usernamePostName = "username";
+  hulken.settings.passwordPostName = "password";
+  hulken.settings.loginUrl = "/login";
+  hulken.settings.loginResponseExpectedText = "";
+  hulken.settings.happyTimeLimit = 5;
+  hulken.settings.happyTimeLimitLocalhost = 10;
+  hulken.settings.numberOfHulkenAgents = 1;
+}
 
-var hulkHappyCallback;
-var hulkAngryCallback;
-var hulkenStart;
-var hulken_requests = [];
-var stressTestRequests = [];
-var executedRequests = [];
 
-// defaults that can be overriden by options
-var targetUrl = "http://localhost";
-var timesToRunEachRequest = 1;
-var requestsFilePath = "./hulkenRequests.json";
-var tokensSkippingRequest = [':'];
-var requestsToSkip = ['/logout', 'signoff'];
-var loginRequired = false;
-var username = "";
-var password = "";
-var usernamePostName = "username";
-var passwordPostName = "password";
-var loginUrl = "/login";
-var loginResponseExpectedText = "";
-var happyTimeLimit = 5;
-var happyTimeLimitLocalhost = 10;
-var numberOfHulkenAgents = 1;
-
-// require() entry point
 exports.run = function(error, success, options) {
+  hulken.init();
   overrideDefaultsWithOptions(options, function() {
     prepareHulkenAgents();
-    hulkHappyCallback = success;
-    hulkAngryCallback = error;
-    hulkenStart = Date.now();
+    hulken.happyCallback = success;
+    hulken.angryCallback = error;
+    hulken.start = Date.now();
     console.log('');
     console.log('..::HULKEN SMASH::..'.bold.green);
     console.log('');
-    fs.readFile(requestsFilePath, 'utf-8', function(err, data) {
+    fs.readFile(hulken.settings.requestsFilePath, 'utf-8', function(err, data) {
       if (err) throw err;
-      hulken_requests = JSON.parse(data);
+      hulken.requestsInfo = JSON.parse(data);
       authenticateAgentsRecursive();
     });
   });
 };
+
 // command line entry point
 if (process.argv.length > 2) { // something more than 'node(index 0) hulken(index 1)'
   if (process.argv[2]) {
@@ -65,103 +73,106 @@ if (process.argv.length > 2) { // something more than 'node(index 0) hulken(inde
   }
 }
 
-function prepareHulkenAgents(){
-  for(var i = 0; i < numberOfHulkenAgents; i++){
-    hulkenAgents.push(superAgent.agent());
+function prepareHulkenAgents() {
+  for (var i = 0; i < hulken.settings.numberOfHulkenAgents; i++) {
+    var agent = superAgent.agent();
+    agent.id = (i + 1);
+    hulken.agents.push(agent);
   }
 }
 
 function overrideDefaultsWithOptions(options, next) {
   if (options) {
     if (options.timesToRunEachRequest) {
-      timesToRunEachRequest = options.timesToRunEachRequest;
+      hulken.settings.timesToRunEachRequest = options.timesToRunEachRequest;
       console.log('number of times to repeat each request set to '.cyan +
-        timesToRunEachRequest.toString().bold.magenta);
+        hulken.settings.timesToRunEachRequest.toString().bold.magenta);
     }
     if (options.targetUrl) {
-      targetUrl = options.targetUrl;
-      console.log('target url set to '.cyan + targetUrl.bold.magenta);
+      hulken.settings.targetUrl = options.targetUrl;
+      console.log('target url set to '.cyan + hulken.settings.targetUrl.bold.magenta);
     }
     if (options.requestsFilePath) {
-      requestsFilePath = options.requestsFilePath;
+      hulken.settings.requestsFilePath = options.requestsFilePath;
       console.log('request file path (including file name) set to '.cyan +
-        requestsFilePath.bold.magenta);
+        hulken.settings.requestsFilePath.bold.magenta);
     }
     if (options.tokensSkippingRequest) {
-      tokensSkippingRequest = options.tokensSkippingRequest;
+      hulken.settings.tokensSkippingRequest = options.tokensSkippingRequest;
       console.log(
         'the following characters (in an url) will cause a request to be skipped '
-        .cyan + tokensSkippingRequest.toString().bold.magenta);
+        .cyan + hulken.settings.tokensSkippingRequest.toString().bold.magenta);
     }
     if (options.requestsToSkip) {
-      requestsToSkip = options.requestsToSkip;
-      console.log('requests to skip set to '.cyan + requestsToSkip.toString()
+      hulken.settings.requestsToSkip = options.requestsToSkip;
+      console.log('requests to skip set to '.cyan + hulken.settings.requestsToSkip.toString()
         .bold.magenta);
     }
     if (options.loginRequired !== null && options.loginRequired !== undefined) {
-      loginRequired = options.loginRequired;
-      console.log('loginRequired set to '.cyan + loginRequired.toString().bold
+      hulken.settings.loginRequired = options.loginRequired;
+      console.log('loginRequired set to '.cyan + hulken.settings.loginRequired.toString().bold
         .magenta);
     }
     if (options.username) {
-      username = options.username;
-      console.log('username set to '.cyan + username.bold.magenta);
+      hulken.settings.username = options.username;
+      console.log('username set to '.cyan + hulken.settings.username.bold.magenta);
     }
     if (options.password) {
-      password = options.password;
+      hulken.settings.password = options.password;
       console.log(
         'password set ... check options file, im not gonna display it here! =) '
         .cyan);
     }
     if (options.loginUrl) {
-      loginUrl = options.loginUrl;
-      console.log('loginUrl set to '.cyan + loginUrl.bold.magenta);
+      hulken.settings.loginUrl = options.loginUrl;
+      console.log('loginUrl set to '.cyan + hulken.settings.loginUrl.bold.magenta);
     }
     if (options.loginResponseExpectedText) {
-      loginResponseExpectedText = options.loginResponseExpectedText;
+      hulken.settings.loginResponseExpectedText = options.loginResponseExpectedText;
       console.log('loginResponseExpectedText set to '.cyan +
-        loginResponseExpectedText.bold.magenta);
+        hulken.settings.loginResponseExpectedText.bold.magenta);
     }
     if (options.happyTimeLimit) {
-      happyTimeLimit = options.happyTimeLimit;
-      console.log('happyTimeLimit set to '.cyan + happyTimeLimit.toString().bold
+      hulken.settings.happyTimeLimit = options.happyTimeLimit;
+      console.log('happyTimeLimit set to '.cyan + hulken.settings.happyTimeLimit.toString().bold
         .magenta);
     }
     if (options.happyTimeLimitLocalhost) {
-      happyTimeLimitLocalhost = options.happyTimeLimitLocalhost;
+      hulken.settings.happyTimeLimitLocalhost = options.happyTimeLimitLocalhost;
       console.log('happyTimeLimitLocalhost set to '.cyan +
-        happyTimeLimitLocalhost.toString().bold.magenta);
+        hulken.settings.happyTimeLimitLocalhost.toString().bold.magenta);
     }
     if (options.usernamePostName) {
-      usernamePostName = options.usernamePostName;
+      hulken.settings.usernamePostName = options.usernamePostName;
       console.log('usernamePostName set to '.cyan +
-        usernamePostName.bold.magenta);
+        hulken.settings.usernamePostName.bold.magenta);
     }
     if (options.passwordPostName) {
-      passwordPostName = options.passwordPostName;
+      hulken.settings.passwordPostName = options.passwordPostName;
       console.log('passwordPostName set to '.cyan +
-        passwordPostName.bold.magenta);
+        hulken.settings.passwordPostName.bold.magenta);
     }
-    if(options.numberOfHulkenAgents) {
-      numberOfHulkenAgents = options.numberOfHulkenAgents;
+    if (options.numberOfHulkenAgents) {
+      hulken.settings.numberOfHulkenAgents = options.numberOfHulkenAgents;
       console.log('numberOfHulkenAgents set to '.cyan +
-        numberOfHulkenAgents.toString().bold.magenta);
+        hulken.settings.numberOfHulkenAgents.toString().bold.magenta);
     }
   }
   next();
 }
 
 function authenticateAgentsRecursive(index) {
-  if(!index){
+  if (!index) {
     index = 0;
   }
-  var hulkenAgent = hulkenAgents[index];
-  console.log(('initiating agent ' + (index + 1).toString() + ' of ' + hulkenAgents.length.toString()).magenta);
+  var hulkenAgent = hulken.agents[index];
+  console.log(('initiating agent ' + (index + 1).toString() + ' of ' + hulken.agents
+    .length.toString()).magenta);
   var loginPayload = {};
-  loginPayload[usernamePostName] = username;
-  loginPayload[passwordPostName] = password;
+  loginPayload[hulken.settings.usernamePostName] = hulken.settings.username;
+  loginPayload[hulken.settings.passwordPostName] = hulken.settings.password;
 
-  if (loginRequired) {
+  if (hulken.settings.loginRequired) {
     hulkenAgent.post(targetUrl + loginUrl).send(loginPayload).end(function(res) {
       try {
         expect(res).to.exist;
@@ -170,9 +181,9 @@ function authenticateAgentsRecursive(index) {
         console.log('... user authenticated successfully!'.magenta);
 
         index++;
-        if (index < hulkenAgents.length) {
+        if (index < hulken.agents.length) {
           authenticateAgentsRecursive(index);
-        }else{
+        } else {
           executeRequests();
         }
 
@@ -190,9 +201,9 @@ function authenticateAgentsRecursive(index) {
   } else {
     console.log('... no login required, continuing with anonymous user'.cyan);
     index++;
-    if (index < hulkenAgents.length) {
+    if (index < hulken.agents.length) {
       authenticateAgentsRecursive(index);
-    }else{
+    } else {
       executeRequests();
     }
   }
@@ -209,20 +220,22 @@ function prepRequestsRecursive(index) {
   if (!index) {
     index = 0;
   }
-  var request = hulken_requests[index];
+  var requestInfo = hulken.requestsInfo[index];
 
-  hulkenAgents.forEach(function(hulkenAgent) {
-    if (!stringIsInArray(requestsToSkip, request.path) && !stringContainsChar(
-      request.path, tokensSkippingRequest)) {
-      for (var i = 0; i < timesToRunEachRequest; i++) {
-        stressTestRequests.push(function() {
+  hulken.agents.forEach(function(hulkenAgent) {
+    if (!stringIsInArray(hulken.settings.requestsToSkip, requestInfo.path) && !
+      stringContainsChar(
+        requestInfo.path, hulken.settings.tokensSkippingRequest)) {
+      for (var i = 0; i < hulken.settings.timesToRunEachRequest; i++) {
+        hulken.requests.push(function() {
           setTimeout(function() {
-            if (request.method.toUpperCase() === 'GET') {
-              makeGETrequest(request,hulkenAgent);
-            } else if (request.method.toUpperCase() === 'POST') {
-              makePOSTrequest(request, hulkenAgent);
+            if (requestInfo.method.toUpperCase() === 'GET') {
+              makeGETrequest(requestInfo, hulkenAgent);
+            } else if (requestInfo.method.toUpperCase() === 'POST') {
+              makePOSTrequest(requestInfo, hulkenAgent);
             } else {
-              throw "HTTP VERB " + request.method + " is not supported";
+              throw "HTTP VERB " + requestInfo.method +
+                " is not supported";
             }
           }, getRandomWaitTime());
         });
@@ -230,42 +243,43 @@ function prepRequestsRecursive(index) {
     }
   });
   index++;
-  if (index < hulken_requests.length) {
+  if (index < hulken.requestsInfo.length) {
     prepRequestsRecursive(index);
   }
 }
 
-function makePOSTrequest(request, hAgent) {
+function makePOSTrequest(request, hulkenAgent) {
   if (!request.payload) {
     throw "you have to provide a payload for POST requests!";
   }
   var reqStart = Date.now();
-  hAgent.post(targetUrl + request.path).send(request.payload).end(function(
-    res) {
-    handleRequestResult(res, reqStart, request);
-  });
+  hulkenAgent.post(hulken.settings.targetUrl + request.path).send(request.payload)
+    .end(function(
+      res) {
+      handleRequestResult(res, reqStart, request, hulkenAgent);
+    });
 }
 
-function makeGETrequest(request, hAgent) {
+function makeGETrequest(request, hulkenAgent) {
   var reqStart = Date.now();
-  hAgent.get(targetUrl + request.path).end(function(res) {
-    handleRequestResult(res, reqStart, request);
+  hulkenAgent.get(hulken.settings.targetUrl + request.path).end(function(res) {
+    handleRequestResult(res, reqStart, request, hulkenAgent);
   });
 }
 
-function handleRequestResult(res, reqStart, request) {
+function handleRequestResult(res, reqStart, request, agent) {
   var reqStop = Date.now();
   var reqResponseTime = reqStop - reqStart;
   var reqResponseTimeInSeconds = (
     reqResponseTime / 1000);
   if (reqResponseTimeInSeconds > 3) {
-    console.log((request.method.toUpperCase() + ' ' + request.path +
-        ' responded in ' +
-        reqResponseTimeInSeconds.toString().red + ' seconds').toString()
-      .grey);
+  console.log((request.method.toUpperCase() + ' ' + request.path +
+          ' (by agent ' + agent.id + '/' + hulken.agents.length + ') responded in ' +
+          reqResponseTimeInSeconds.toString().red + ' seconds')
+        .toString().grey);
   } else {
     console.log((request.method.toUpperCase() + ' ' + request.path +
-        ' responded in ' +
+        ' (by agent ' + agent.id + '/' + hulken.agents.length + ') responded in ' +
         reqResponseTimeInSeconds.toString().green + ' seconds')
       .toString().grey);
   }
@@ -285,8 +299,8 @@ function handleRequestResult(res, reqStart, request) {
 }
 
 function executeTestSuite() {
-  async.each(stressTestRequests, function(stressReq, handleNextItemInAsyncEach) {
-    stressReq(); // fire request and immediately continue to the next..
+  async.each(hulken.requests, function(request, handleNextItemInAsyncEach) {
+    request(); // fire request and immediately continue to the next..
     handleNextItemInAsyncEach();
   }, function(asyncEachError) {
     if (asyncEachError) {
@@ -296,28 +310,25 @@ function executeTestSuite() {
 }
 
 function requestExecuted(reqPath, responseTime) {
-  executedRequests.push({
+  hulken.executedRequests.push({
     reqPath: reqPath,
     responseTime: responseTime
   });
 
-  if (executedRequests.length === stressTestRequests.length) {
-    var hulkenStop = Date.now();
+  if (hulken.executedRequests.length === hulken.requests.length) {
+    hulken.stop = Date.now();
     console.log('.. all requests have been executed'.magenta);
-    var hulkenExecutionTime = (hulkenStop - hulkenStart) / 1000;
+    var hulkenExecutionTime = (hulken.stop - hulken.start) / 1000;
 
     var stats = {};
-    stats.numberOfHulkenAgents = numberOfHulkenAgents;
-    stats.numberOfConcurrentRequests = stressTestRequests.length;
-    stats.numberOfUniqueRequests = ((stressTestRequests.length / numberOfHulkenAgents) /
-      timesToRunEachRequest);
+    stats.numberOfHulkenAgents = hulken.settings.numberOfHulkenAgents;
+    stats.numberOfConcurrentRequests = hulken.requests.length;
+    stats.numberOfUniqueRequests = ((hulken.requests.length /
+        hulken.settings.numberOfHulkenAgents) /
+      hulken.settings.timesToRunEachRequest);
     stats.totalSecondsElapsed = hulkenExecutionTime;
-    var totalRespTime = 0;
-    for(var i = 0; i < executedRequests.length; i++){
-      totalRespTime += executedRequests[i].responseTime;
-    }
-    stats.avgReqResponseTime = (totalRespTime / stressTestRequests.length);
-    stats.reqsPerSecond = (stressTestRequests.length / hulkenExecutionTime);
+    stats.avgReqResponseTime = hulken.getAvgResponseTime();
+    stats.reqsPerSecond = (hulken.requests.length / hulkenExecutionTime);
     stats.randomRequestWaitTime = '1-6 seconds';
 
     finsish(hulkenExecutionTime, stats);
@@ -330,7 +341,8 @@ function finsish(hulkenExecutionTime, stats) {
   console.log('**************** RESULT ******************'.bold.cyan);
   console.log('number of concurrent requests ' + stats.numberOfConcurrentRequests
     .toString().magenta);
-  console.log('number of hulken agents running ' + stats.numberOfHulkenAgents.toString().magenta);
+  console.log('number of hulken agents running ' + stats.numberOfHulkenAgents.toString()
+    .magenta);
   console.log('number of unique requests ' + stats.numberOfUniqueRequests.toString()
     .magenta);
   console.log('total seconds elapsed  ' + stats.totalSecondsElapsed.toString()
@@ -341,29 +353,31 @@ function finsish(hulkenExecutionTime, stats) {
   console.log('random request wait time (in seconds)' + ' 1-6'.magenta);
   console.log('******************************************'.bold.cyan);
 
-  var isLocalhost = (targetUrl.indexOf("localhost") > -1);
+  var isLocalhost = (hulken.settings.targetUrl.indexOf("localhost") > -1) ||
+      (hulken.settings.targetUrl.indexOf("127.0.0.1") > -1);
+
   if (isLocalhost) {
-    if (hulkenExecutionTime < happyTimeLimitLocalhost) {
+    if (hulkenExecutionTime < hulken.settings.happyTimeLimitLocalhost) {
       console.log('');
       console.log('HULKEN THINKS RESULT OK FOR LOCALHOST'.bold.green);
       console.log('');
-      hulkHappyCallback(stats);
+      hulken.happyCallback(stats);
     } else {
       console.log('.... BAD RESULT, EVEN FOR LOCALHOST! ...'.bold.green +
         ' HULKEN ANGRY!'.bold.red);
-      hulkAngryCallback(stats);
+      hulken.angryCallback(stats);
     }
   } else {
-    if (hulkenExecutionTime < happyTimeLimit) {
+    if (hulkenExecutionTime < hulken.settings.happyTimeLimit) {
       console.log('');
       console.log('HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!'
         .bold
         .green);
       console.log('');
-      hulkHappyCallback(stats);
+      hulken.happyCallback(stats);
     } else {
       console.log('.... BAD RESULT...'.green + ' HULKEN ANGRY'.bold.red);
-      hulkAngryCallback(stats);
+      hulken.angryCallback(stats);
     }
   }
 }

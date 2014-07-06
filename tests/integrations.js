@@ -15,7 +15,7 @@ var runHulkenTestSuite = function(){
 
   var hulken = require('../hulken.js');
   var hulken_options = {
-    targetUrl: 'http://localhost:5656',
+    targetUrl: 'http://127.0.0.1:5656',
     requestsFilePath: './tests/hulkenRequests.json',
     timesToRunEachRequest: 1,
     numberOfHulkenAgents: numberOfHulkenAgentsInTest
