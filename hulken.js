@@ -173,11 +173,11 @@ function authenticateAgentsRecursive(index) {
   loginPayload[hulken.settings.passwordPostName] = hulken.settings.password;
 
   if (hulken.settings.loginRequired) {
-    hulkenAgent.post(targetUrl + loginUrl).send(loginPayload).end(function(res) {
+    hulkenAgent.post(hulken.settings.targetUrl + hulken.settings.loginUrl).send(loginPayload).end(function(res) {
       try {
         expect(res).to.exist;
         expect(res.status).to.equal(200);
-        expect(res.text).to.contain(loginResponseExpectedText);
+        expect(res.text).to.contain(hulken.settings.loginResponseExpectedText);
         console.log('... user authenticated successfully!'.magenta);
 
         index++;
