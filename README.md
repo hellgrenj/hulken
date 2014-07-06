@@ -1,7 +1,7 @@
 hulken
 ======
 
-Hulken is a small node tool for simple stress testing of web applications. It can be required and used in your node code but it can also be used as a stand alone command line tool.
+Hulken is a small node tool for simple stress testing of web applications. It can be required and used in your node code but it can also be used as a stand-alone command line tool.
 When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.
 
 
