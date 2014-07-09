@@ -1,6 +1,6 @@
 {
   "name": "hulken",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "description": "Hulken is a small tool for simple stress testing of web applications.It can be required and used in your code but it can also be used as a stand-alone command line tool.",
   "main": "hulken.js",
   "dependencies": {
@@ -8,6 +8,10 @@
     "colors": "^0.6.2",
     "expect.js": "^0.3.1",
     "superagent": "^0.18.0"
+  },
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/hellgrenj/hulken.git"
   },
   "scripts": {
     "test": "node ./tests/integrations.js"
@@ -17,11 +21,10 @@
     "hulken": "./hulken.js"
   },
   "keywords": [
+    "stress test",
+    "load test",
     "stress",
-    "test",
-    "load",
-    "hulken"
-
+    "test"
   ],
   "author": "Johan Hellgren",
   "license": "MIT"
