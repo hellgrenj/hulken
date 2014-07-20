@@ -181,7 +181,7 @@ function authenticateAgentsRecursive(index) {
     hulkenAgent.post(hulken.settings.targetUrl + hulken.settings.loginUrl).send(
       loginPayload).end(function(err, res) {
       if (err) {
-        console.log('HULKEN login request failed!'.inverse.red);
+        console.log('HULKEN login request failed with error: '.inverse.red + err.inverse.red);
         process.exit(code = 1);
         return;
       }
