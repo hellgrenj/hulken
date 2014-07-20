@@ -19,12 +19,15 @@ var runHulkenTestSuite = function(){
     requestsFilePath: './tests/hulkenRequests.json',
     timesToRunEachRequest: 1,
     numberOfHulkenAgents: numberOfHulkenAgentsInTest,
-    happyTimeLimit: 10
+    happyTimeLimit: 10,
+    slowRequestsTimeLimit: 0.5
   };
   testStart = Date.now();
   hulken.run(function(stats){
+      console.log(stats);
       verify(stats); // we do not care about the performance of our testWebServer..
   }, function(stats) {
+      console.log(stats);
       verify(stats);
   }, hulken_options);
 };
@@ -63,6 +66,7 @@ function verify(stats){
     // if we get here without expect throwing any errors..
     passTest();
   }catch(expectError){
+    printMaxNumberOfConnections();
     console.log('.. Integration tests failed! =('.bold.inverse.red);
     console.log(expectError.stack.toString().bold.inverse.red);
     console.log('');
@@ -71,12 +75,17 @@ function verify(stats){
 
 }
 function passTest(){
+  printMaxNumberOfConnections();
   testStop = Date.now();
   var testExecutionTime = (testStop - testStart)/ 1000;
   console.log('.. Integration tests passed! =)'.bold.inverse.green);
   printExecutionTime();
   console.log('');
   process.exit(code = 0);
+}
+function printMaxNumberOfConnections(){
+  console.log(('maximum number of http connections during test:' +
+  testWebServer.getMaxNumberOfConcurrentConnections().toString()).bold.inverse.grey);
 }
 function printExecutionTime(){
   testStop = Date.now();
