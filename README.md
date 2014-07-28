@@ -73,9 +73,6 @@ The requestsFile is a json file and looks like this.
 ```
 POSTs require a payload.
 
-If you are running an express 3 application and thinks hand crafting a requests file sounds like a drag check out ***[hulken_informant_express3](https://github.com/hellgrenj/hulken_informant_express3)***.
-If you run something else but still want to automate the creation of the requestsFile please make an "hulken_informant_x" out of it and send me the link =)
-
 **The stats object returned looks like this.**
 ```
 { numberOfHulkenAgents: 50,
@@ -107,18 +104,26 @@ The options file is a simple json and looks something like this.
 **You can set the same settings in this file as when you require hulken in your code and passing in an options object.**  
 *See Usage (as a library).* Options files make it easy to reuse your requestsFile against different environments.
 
-##Tests
-`npm test`
+##hulken_informant's
+an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!
+
+[hulken_informant_express3 (works with express3)](https://www.npmjs.org/package/hulken_informant_express3)  
+[hulken_informant_hapi (works with hapi.js)](https://www.npmjs.org/package/hulken_informant_hapi)
 
 ##Blog posts
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.3.1** (non breaking changes only)
+* added a new hulken informant for hapi.js
+
 **0.3.0**   (non breaking changes only)
 * Improved connection error handling
 * slowRequestsLimit can now be passed in as an option
 * stats object now contains all slow requests and all failed requests
 
+##Tests
+`npm test`
 
 ##License
 Released under the MIT license. Copyright (c) 2014 Johan Hellgren.
