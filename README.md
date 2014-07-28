@@ -119,7 +119,7 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 
 **0.3.0**   (non breaking changes only)
 * Improved connection error handling
-* slowRequestsLimit can now be passed in as an option
+* slowRequestsTimeLimit can now be passed in as an option
 * stats object now contains all slow requests and all failed requests
 
 ##Tests
