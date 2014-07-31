@@ -41,6 +41,7 @@ function setDefaults() {
   hulken.settings.happyTimeLimit = 10;
   hulken.settings.numberOfHulkenAgents = 1;
   hulken.settings.slowRequestsTimeLimit = 3;
+  hulken.settings.angryOnFailedRequest = false;
 }
 
 
@@ -162,6 +163,11 @@ function overrideDefaultsWithOptions(options, next) {
       console.log('slowRequestsTimeLimit set to '.cyan +
         hulken.settings.slowRequestsTimeLimit.toString().bold.magenta);
     }
+    if(options.angryOnFailedRequest){
+      hulken.settings.angryOnFailedRequest = options.angryOnFailedRequest;
+      console.log('angryOnFailedRequest set to '.cyan +
+        hulken.settings.angryOnFailedRequest.toString().bold.magenta);
+    }
   }
   next();
 }
@@ -181,7 +187,8 @@ function authenticateAgentsRecursive(index) {
     hulkenAgent.post(hulken.settings.targetUrl + hulken.settings.loginUrl).send(
       loginPayload).end(function(err, res) {
       if (err) {
-        console.log('HULKEN login request failed with error: '.inverse.red + err.inverse.red);
+        console.log('HULKEN login request failed with error: '.inverse.red +
+          err.inverse.red);
         process.exit(code = 1);
         return;
       }
@@ -319,21 +326,26 @@ function handleRequestResult(res, reqStart, request, agent, failed, error) {
         expect(res.text).to.contain(request.expectedTextToExist);
       }
     } catch (err) {
+      addFailedRequest(request, err, reqResponseTimeInSeconds);
       console.log(('GET ' + request.path + ' resulted in ' + err).toString()
-        .yellow);
+        .red);
     }
   } else {
-    hulken.failedRequests.push({
-      reqPath: request.path,
-      error: error,
-      responseTime: reqResponseTimeInSeconds
-    });
+    addFailedRequest(request, error, reqResponseTimeInSeconds);
     console.log((request.method.toUpperCase() + ' ' + request.path +
         ' (by agent ' + agent.id + '/' + hulken.agents.length +
         ') failed with error: ' + error)
       .toString().red);
   }
   requestExecuted(request.path, reqResponseTimeInSeconds);
+}
+
+function addFailedRequest(request, error, responseTimeInSeconds) {
+  hulken.failedRequests.push({
+    reqPath: request.path,
+    error: error,
+    responseTime: responseTimeInSeconds
+  });
 }
 
 function executeTestSuite() {
@@ -375,7 +387,39 @@ function requestExecuted(reqPath, responseTime) {
 }
 
 function finsish(hulkenExecutionTime, stats) {
+  printStats(stats);
+  if (hulken.settings.angryOnFailedRequest) {
+    if (hulkenExecutionTime < hulken.settings.happyTimeLimit && stats.failedRequests
+      .length === 0) {
+      success(stats);
+    } else {
+      failure(stats);
+    }
+  } else {
+    if (hulkenExecutionTime < hulken.settings.happyTimeLimit) {
+      success(stats);
+    } else {
+      failure(stats);
+    }
+  }
 
+}
+
+function success(stats) {
+  console.log('');
+  console.log('HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!'
+    .bold
+    .green);
+  console.log('');
+  hulken.happyCallback(stats);
+}
+
+function failure(stats) {
+  console.log('.... BAD RESULT... HULKEN ANGRY!'.bold.red);
+  hulken.angryCallback(stats);
+}
+
+function printStats(stats) {
   console.log('');
   console.log('**************** RESULT ******************'.bold.cyan);
   console.log('number of concurrent requests ' + stats.numberOfConcurrentRequests
@@ -395,18 +439,6 @@ function finsish(hulkenExecutionTime, stats) {
   console.log('req/sec ' + stats.reqsPerSecond.toFixed(2).magenta);
   console.log('random request wait time (in seconds)' + ' 1-6'.magenta);
   console.log('******************************************'.bold.cyan);
-
-  if (hulkenExecutionTime < hulken.settings.happyTimeLimit) {
-    console.log('');
-    console.log('HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!'
-      .bold
-      .green);
-    console.log('');
-    hulken.happyCallback(stats);
-  } else {
-    console.log('.... BAD RESULT... HULKEN ANGRY!'.bold.red);
-    hulken.angryCallback(stats);
-  }
 }
 
 function getRandomWaitTime() {

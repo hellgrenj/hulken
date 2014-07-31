@@ -20,14 +20,15 @@ var runHulkenTestSuite = function(){
     timesToRunEachRequest: 1,
     numberOfHulkenAgents: numberOfHulkenAgentsInTest,
     happyTimeLimit: 10,
-    slowRequestsTimeLimit: 0.5
+    slowRequestsTimeLimit: 0.5,
+    angryOnFailedRequest: false
   };
   testStart = Date.now();
   hulken.run(function(stats){
       console.log(stats);
       verify(stats); // we do not care about the performance of our testWebServer..
   }, function(stats) {
-      console.log(stats);
+
       verify(stats);
   }, hulken_options);
 };
@@ -57,6 +58,7 @@ function verify(stats){
     expect(testWebServer.getStartPageReqsReceived()).to.equal(numberOfHulkenAgentsInTest);
     expect(testWebServer.getSomeotherPageReqsReceived()).to.equal(numberOfHulkenAgentsInTest);
     expect(testWebServer.getPostsToStartPage()).to.equal(numberOfHulkenAgentsInTest);
+    expect(stats.failedRequests).to.have.length(numberOfHulkenAgentsInTest); //one request is looking for a wrong expectedTextToExist
 
     var postValues = testWebServer.getPostVars();
     expect(postValues).to.have.property('foo');

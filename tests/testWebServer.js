@@ -50,6 +50,11 @@ exports.start = function(next) {
           'Content-Type': 'text/html'
         });
         res.end('you have reached someother page');
+      } else if (uri == "/another") {
+        res.writeHead(200, {
+          'Content-Type': 'text/html'
+        });
+        res.end('you have reached another page');
       } else {
         respond404(res);
       }

@@ -49,7 +49,7 @@ hulken.run(function(stats){
 * **loginResponseExpectedText** ("") | a text which hulken searches for in the response to the login post (if non is provided hulken will consider http 200 OK good enough)
 * **happyTimeLimit** (10) | max test suite duration (in seconds). If the whole test takes longer than this value hulken gets angry.
 * **slowRequestsTimeLimit** (3) | response times (in seconds) over this value are considered slow
-
+* **angryOnFailedRequest** (false) | Hulken angry (error callback) if a single request fails
 
 The requestsFile is a json file and looks like this.  
 ```
@@ -114,6 +114,11 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.4.0** (non breaking changes only)
+* angryOnFailedRequest can now be passed in as an option
+* now returning all failed requests (http errors, wrong expectedTextToExist etc) not only connection errors
+
+
 **0.3.1** (non breaking changes only)
 * added a new hulken informant for hapi.js
 

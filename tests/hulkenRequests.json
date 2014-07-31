@@ -1,5 +1,9 @@
 [{
   "method": "get",
+  "path": "/another",
+  "expectedTextToExist": "you have reached another page!WrongOnPurpose!" 
+}, {
+  "method": "get",
   "path": "/someother",
   "expectedTextToExist": "you have reached someother page"
 }, {
