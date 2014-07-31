@@ -49,7 +49,7 @@ hulken.run(function(stats){
 * **loginResponseExpectedText** ("") | a text which hulken searches for in the response to the login post (if non is provided hulken will consider http 200 OK good enough)
 * **happyTimeLimit** (10) | max test suite duration (in seconds). If the whole test takes longer than this value hulken gets angry.
 * **slowRequestsTimeLimit** (3) | response times (in seconds) over this value are considered slow
-* **angryOnFailedRequest** (false) | Hulken angry (error callback) if a single request fails
+* **angryOnFailedRequest** (false) | Hulken gets angry (calls error callback) if a single request fails
 
 The requestsFile is a json file and looks like this.  
 ```
