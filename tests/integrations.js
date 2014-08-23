@@ -21,7 +21,10 @@ var runHulkenTestSuite = function(){
     numberOfHulkenAgents: numberOfHulkenAgentsInTest,
     happyTimeLimit: 10,
     slowRequestsTimeLimit: 0.5,
-    angryOnFailedRequest: false
+    angryOnFailedRequest: false,
+    chatty: false,
+    happyMessage: "HULKEN HAPPY!",
+    angryMessage: "HULKEN ANGRY!"
   };
   testStart = Date.now();
   hulken.run(function(stats){

@@ -50,6 +50,9 @@ hulken.run(function(stats){
 * **happyTimeLimit** (10) | max test suite duration (in seconds). If the whole test takes longer than this value hulken gets angry.
 * **slowRequestsTimeLimit** (3) | response times (in seconds) over this value are considered slow
 * **angryOnFailedRequest** (false) | Hulken gets angry (calls error callback) if a single request fails
+* **chatty** (true) | set to false to make Hulken less chatty
+* **happyMessage** ("HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!") | pass in what you want Hulken to say when Hulken is happy with a result
+* **angryMessage** (".... BAD RESULT... HULKEN ANGRY!") | pass in what you want Hulken to say when Hulken is angry with a result
 
 The requestsFile is a json file and looks like this.  
 ```
@@ -114,6 +117,11 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.5.0** (non breaking changes only)
+* pass in "chatty: false" to make Hulken less chatty!
+* happyMessage can now be passed in as an option
+* angryMessage can now be passed in as an option
+
 **0.4.0** (non breaking changes only)
 * angryOnFailedRequest can now be passed in as an option
 * now returning all failed requests (http errors, wrong expectedTextToExist etc) not only connection errors

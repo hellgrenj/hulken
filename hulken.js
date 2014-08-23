@@ -42,6 +42,10 @@ function setDefaults() {
   hulken.settings.numberOfHulkenAgents = 1;
   hulken.settings.slowRequestsTimeLimit = 3;
   hulken.settings.angryOnFailedRequest = false;
+  hulken.settings.chatty = true;
+  hulken.settings.happyMessage = "HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!";
+  hulken.settings.angryMessage = "....BAD RESULT...HULKEN ANGRY!";
+
 }
 
 
@@ -163,10 +167,25 @@ function overrideDefaultsWithOptions(options, next) {
       console.log('slowRequestsTimeLimit set to '.cyan +
         hulken.settings.slowRequestsTimeLimit.toString().bold.magenta);
     }
-    if(options.angryOnFailedRequest){
+    if (options.angryOnFailedRequest) {
       hulken.settings.angryOnFailedRequest = options.angryOnFailedRequest;
       console.log('angryOnFailedRequest set to '.cyan +
         hulken.settings.angryOnFailedRequest.toString().bold.magenta);
+    }
+    if (options.chatty !== null && options.chatty !== undefined) {
+      hulken.settings.chatty = options.chatty;
+      console.log('chatty set to '.cyan +
+        hulken.settings.chatty.toString().bold.magenta);
+    }
+    if (options.happyMessage) {
+      hulken.settings.happyMessage = options.happyMessage;
+      console.log('happyMessage set to '.cyan +
+        hulken.settings.happyMessage.toString().bold.magenta);
+    }
+    if (options.angryMessage) {
+      hulken.settings.angryMessage = options.angryMessage;
+      console.log('angryMessage set to '.cyan +
+        hulken.settings.angryMessage.toString().bold.magenta);
     }
   }
   next();
@@ -177,8 +196,11 @@ function authenticateAgentsRecursive(index) {
     index = 0;
   }
   var hulkenAgent = hulken.agents[index];
-  console.log(('initiating agent ' + (index + 1).toString() + ' of ' + hulken.agents
-    .length.toString()).magenta);
+  if (hulken.settings.chatty) {
+    console.log(('initiating agent ' + (index + 1).toString() + ' of ' + hulken
+      .agents
+      .length.toString()).magenta);
+  }
   var loginPayload = {};
   loginPayload[hulken.settings.usernamePostName] = hulken.settings.username;
   loginPayload[hulken.settings.passwordPostName] = hulken.settings.password;
@@ -196,7 +218,10 @@ function authenticateAgentsRecursive(index) {
         expect(res).to.exist;
         expect(res.status).to.equal(200);
         expect(res.text).to.contain(hulken.settings.loginResponseExpectedText);
-        console.log('... user authenticated successfully!'.magenta);
+        if (hulken.settings.chatty) {
+          console.log('... user authenticated successfully!'.magenta);
+        }
+
 
         index++;
         if (index < hulken.agents.length) {
@@ -217,7 +242,9 @@ function authenticateAgentsRecursive(index) {
 
     });
   } else {
-    console.log('... no login required, continuing with anonymous user'.cyan);
+    if (hulken.settings.chatty) {
+      console.log('... no login required, continuing with anonymous user'.cyan);
+    }
     index++;
     if (index < hulken.agents.length) {
       authenticateAgentsRecursive(index);
@@ -306,17 +333,21 @@ function handleRequestResult(res, reqStart, request, agent, failed, error) {
         reqPath: request.path,
         responseTime: reqResponseTimeInSeconds
       });
-      console.log((request.method.toUpperCase() + ' ' + request.path +
-          ' (by agent ' + agent.id + '/' + hulken.agents.length +
-          ') responded in ' +
-          reqResponseTimeInSeconds.toString().yellow + ' seconds')
-        .toString().grey);
+      if (hulken.settings.chatty) {
+        console.log((request.method.toUpperCase() + ' ' + request.path +
+            ' (by agent ' + agent.id + '/' + hulken.agents.length +
+            ') responded in ' +
+            reqResponseTimeInSeconds.toString().yellow + ' seconds')
+          .toString().grey);
+      }
     } else {
-      console.log((request.method.toUpperCase() + ' ' + request.path +
-          ' (by agent ' + agent.id + '/' + hulken.agents.length +
-          ') responded in ' +
-          reqResponseTimeInSeconds.toString().green + ' seconds')
-        .toString().grey);
+      if (hulken.settings.chatty) {
+        console.log((request.method.toUpperCase() + ' ' + request.path +
+            ' (by agent ' + agent.id + '/' + hulken.agents.length +
+            ') responded in ' +
+            reqResponseTimeInSeconds.toString().green + ' seconds')
+          .toString().grey);
+      }
     }
 
     try {
@@ -327,8 +358,10 @@ function handleRequestResult(res, reqStart, request, agent, failed, error) {
       }
     } catch (err) {
       addFailedRequest(request, err, reqResponseTimeInSeconds);
-      console.log(('GET ' + request.path + ' resulted in ' + err).toString()
-        .red);
+      if (hulken.settings.chatty) {
+        console.log(('GET ' + request.path + ' resulted in ' + err).toString()
+          .red);
+      }
     }
   } else {
     addFailedRequest(request, error, reqResponseTimeInSeconds);
@@ -407,15 +440,13 @@ function finsish(hulkenExecutionTime, stats) {
 
 function success(stats) {
   console.log('');
-  console.log('HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!'
-    .bold
-    .green);
+  console.log(hulken.settings.happyMessage.bold.green);
   console.log('');
   hulken.happyCallback(stats);
 }
 
 function failure(stats) {
-  console.log('.... BAD RESULT... HULKEN ANGRY!'.bold.red);
+  console.log(hulken.settings.angryMessage.bold.red);
   hulken.angryCallback(stats);
 }
 
