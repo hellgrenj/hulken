@@ -45,6 +45,8 @@ function setDefaults() {
   hulken.settings.chatty = true;
   hulken.settings.happyMessage = "HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!";
   hulken.settings.angryMessage = "....BAD RESULT...HULKEN ANGRY!";
+  hulken.settings.minWaitTime = 1000;
+  hulken.settings.maxWaitTime = 6000;
 
 }
 
@@ -186,6 +188,16 @@ function overrideDefaultsWithOptions(options, next) {
       hulken.settings.angryMessage = options.angryMessage;
       console.log('angryMessage set to '.cyan +
         hulken.settings.angryMessage.toString().bold.magenta);
+    }
+    if(options.minWaitTime) {
+      hulken.settings.minWaitTime = options.minWaitTime;
+      console.log('minWaitTime set to '.cyan +
+        hulken.settings.minWaitTime.toString().bold.magenta);
+    }
+    if(options.maxWaitTime) {
+      hulken.settings.maxWaitTime = options.maxWaitTime;
+      console.log('maxWaitTime set to '.cyan +
+        hulken.settings.maxWaitTime.toString().bold.magenta);
     }
   }
   next();
@@ -468,13 +480,13 @@ function printStats(stats) {
   console.log('avg response time (in seconds)  ' + stats.avgReqResponseTime.toFixed(
     4).magenta);
   console.log('req/sec ' + stats.reqsPerSecond.toFixed(2).magenta);
-  console.log('random request wait time (in seconds)' + ' 1-6'.magenta);
+  console.log('random request wait time (in seconds) ' + ((hulken.settings.minWaitTime/1000) + '-' + (hulken.settings.maxWaitTime / 1000)).magenta);
   console.log('******************************************'.bold.cyan);
 }
 
 function getRandomWaitTime() {
-  var min = 1000; // 1 second
-  var max = 6000; // 6 seconds
+  var min = hulken.settings.minWaitTime;
+  var max = hulken.settings.maxWaitTime;
   var randomWaitTime = Math.random() * (max - min) + min;
   return randomWaitTime;
 }

@@ -24,7 +24,9 @@ var runHulkenTestSuite = function(){
     angryOnFailedRequest: false,
     chatty: false,
     happyMessage: "HULKEN HAPPY!",
-    angryMessage: "HULKEN ANGRY!"
+    angryMessage: "HULKEN ANGRY!",
+    minWaitTime: 500,
+    maxWaitTime: 2000    
   };
   testStart = Date.now();
   hulken.run(function(stats){

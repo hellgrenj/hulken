@@ -53,6 +53,8 @@ hulken.run(function(stats){
 * **chatty** (true) | set to false to make Hulken less chatty
 * **happyMessage** ("HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!") | pass in what you want Hulken to say when Hulken is happy with a result
 * **angryMessage** (".... BAD RESULT... HULKEN ANGRY!") | pass in what you want Hulken to say when Hulken is angry with a result
+* **minWaitTime** (1000) | minimum wait time in milliseconds (every request waits for a random time before executing)
+* **maxWaitTime** (6000) | maximum wait time in milliseconds (every request waits for a random time before executing)
 
 The requestsFile is a json file and looks like this.  
 ```
@@ -117,6 +119,10 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.6.0** (non breaking changes only)
+* minWaitTime can now be passed in as an option
+* maxWaitTime can now be passed in as an option
+
 **0.5.0** (non breaking changes only)
 * pass in "chatty: false" to make Hulken less chatty!
 * happyMessage can now be passed in as an option
