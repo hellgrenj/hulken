@@ -26,19 +26,19 @@ var runHulkenTestSuite = function(){
     happyMessage: "HULKEN HAPPY!",
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
-    maxWaitTime: 2000    
+    maxWaitTime: 2000
   };
   testStart = Date.now();
   hulken.run(function(stats){
       console.log(stats);
-      verify(stats); // we do not care about the performance of our testWebServer..
+      verify(stats,hulken_options); // we do not care about the performance of our testWebServer..
   }, function(stats) {
 
-      verify(stats);
+      verify(stats,hulken_options);
   }, hulken_options);
 };
 
-function verify(stats){
+function verify(stats, hulken_options){
   try{
     expect(stats).to.exist;
     expect(stats).to.have.property('numberOfConcurrentRequests');
@@ -53,6 +53,7 @@ function verify(stats){
     expect(stats.reqsPerSecond).to.be.ok();
     expect(stats).to.have.property('randomRequestWaitTime');
     expect(stats.randomRequestWaitTime).to.be.ok();
+    expect(stats.randomRequestWaitTime).to.equal((hulken_options.minWaitTime/1000) +'-'+ (hulken_options.maxWaitTime/1000));
     expect(stats).to.have.property('numberOfHulkenAgents');
     expect(stats.numberOfHulkenAgents).to.be.ok();
 

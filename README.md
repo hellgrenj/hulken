@@ -119,6 +119,9 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.6.1** (minor bug fix)
+* stats object returned now containing correct randomRequestWaitTime
+
 **0.6.0** (non breaking changes only)
 * minWaitTime can now be passed in as an option
 * maxWaitTime can now be passed in as an option

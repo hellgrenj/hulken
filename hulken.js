@@ -424,7 +424,7 @@ function requestExecuted(reqPath, responseTime) {
     stats.totalSecondsElapsed = hulkenExecutionTime;
     stats.avgReqResponseTime = hulken.getAvgResponseTime();
     stats.reqsPerSecond = (hulken.requests.length / hulkenExecutionTime);
-    stats.randomRequestWaitTime = '1-6 seconds';
+    stats.randomRequestWaitTime = (hulken.settings.minWaitTime/1000) + '-' + (hulken.settings.maxWaitTime / 1000);
     stats.slowRequests = hulken.slowRequests;
     stats.failedRequests = hulken.failedRequests;
     finsish(hulkenExecutionTime, stats);
@@ -480,7 +480,7 @@ function printStats(stats) {
   console.log('avg response time (in seconds)  ' + stats.avgReqResponseTime.toFixed(
     4).magenta);
   console.log('req/sec ' + stats.reqsPerSecond.toFixed(2).magenta);
-  console.log('random request wait time (in seconds) ' + ((hulken.settings.minWaitTime/1000) + '-' + (hulken.settings.maxWaitTime / 1000)).magenta);
+  console.log('random request wait time (in seconds) ' + stats.randomRequestWaitTime.magenta);
   console.log('******************************************'.bold.cyan);
 }
 
