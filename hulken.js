@@ -11,8 +11,7 @@ var colors = require('colors');
 if (process.argv.length > 2) { // something more than 'node(index 0) hulken(index 1)'
   if (process.argv[2]) {
     var arg = process.argv[2];
-    if (arg === "make_options") {
-      // generate default options file..
+    if (arg === "make_options") { // generate example options file for specified url
       var appUrl = process.argv[3];
       if (!appUrl) {
         console.log('you have to provide the url!'.red.inverse);
@@ -39,6 +38,7 @@ if (process.argv.length > 2) { // something more than 'node(index 0) hulken(inde
           } else {
             console.log('');
             console.log('an example options.json was created:'.green.inverse);
+            console.log('(please review the requestsFilePath)'.white.inverse);
             console.log('');
             console.log(JSON.stringify(hulken_options,null,4));
             console.log('');
@@ -48,7 +48,7 @@ if (process.argv.length > 2) { // something more than 'node(index 0) hulken(inde
           }
         });
       }
-    } else {
+    } else {// ..it's the path to the options file
       var pathToOptionsFile = arg;
       console.log('setting options from file '.cyan + pathToOptionsFile.bold.magenta);
       fs.readFile(pathToOptionsFile, 'utf-8', function(err, data) {
@@ -96,8 +96,7 @@ function setDefaults() {
   hulken.settings.slowRequestsTimeLimit = 3;
   hulken.settings.angryOnFailedRequest = false;
   hulken.settings.chatty = true;
-  hulken.settings.happyMessage =
-    "HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!";
+  hulken.settings.happyMessage = "HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!";
   hulken.settings.angryMessage = "....BAD RESULT...HULKEN ANGRY!";
   hulken.settings.minWaitTime = 1000;
   hulken.settings.maxWaitTime = 6000;
