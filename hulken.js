@@ -7,6 +7,44 @@ var expect = require('expect.js');
 var async = require('async');
 var colors = require('colors');
 
+// command line entry point
+if (process.argv.length > 2) { // something more than 'node(index 0) hulken(index 1)'
+  if (process.argv[2]) {
+    var arg = process.argv[2];
+    if (arg === "make_options") {
+      // generate default options file..
+      var appUrl = process.argv[3];
+      if (!appUrl) {
+        console.log('you have to provide the url!'.red.inverse);
+      } else {
+        console.log("generating a minimal options file for: ".green + appUrl.magenta);
+        var hulken_options = {
+          targetUrl: appUrl,
+          requestsFilePath: './hulkenRequestsFile.json'
+        };
+        fs.writeFile('./options.json', JSON.stringify(
+          hulken_options), function(err) {
+          if (err) {
+            console.log(err.toString().red.inverse);
+          } else {
+            console.log('a minimal options.json is created!'.green);
+            console.log('see other settings you can override and their default values at: https://github.com/hellgrenj/hulken#usage-as-a-library'.grey.inverse);
+          }
+        });
+      }
+    } else {
+      var pathToOptionsFile = arg;
+      console.log('setting options from file '.cyan + pathToOptionsFile.bold.magenta);
+      fs.readFile(pathToOptionsFile, 'utf-8', function(err, data) {
+        if (err) throw err;
+        var hulken_options = JSON.parse(data);
+        hulken.run(function() {}, function() {}, hulken_options);
+      });
+    }
+  }
+
+}
+
 var hulken = this;
 hulken.init = function() {
   hulken.settings = {};
@@ -43,7 +81,8 @@ function setDefaults() {
   hulken.settings.slowRequestsTimeLimit = 3;
   hulken.settings.angryOnFailedRequest = false;
   hulken.settings.chatty = true;
-  hulken.settings.happyMessage = "HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!";
+  hulken.settings.happyMessage =
+    "HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!";
   hulken.settings.angryMessage = "....BAD RESULT...HULKEN ANGRY!";
   hulken.settings.minWaitTime = 1000;
   hulken.settings.maxWaitTime = 6000;
@@ -68,19 +107,6 @@ exports.run = function(error, success, options) {
     });
   });
 };
-
-// command line entry point
-if (process.argv.length > 2) { // something more than 'node(index 0) hulken(index 1)'
-  if (process.argv[2]) {
-    var pathToOptionsFile = process.argv[2];
-    console.log('setting options from file '.cyan + pathToOptionsFile.bold.magenta);
-    fs.readFile(pathToOptionsFile, 'utf-8', function(err, data) {
-      if (err) throw err;
-      var hulken_options = JSON.parse(data);
-      hulken.run(function() {}, function() {}, hulken_options);
-    });
-  }
-}
 
 function prepareHulkenAgents() {
   for (var i = 0; i < hulken.settings.numberOfHulkenAgents; i++) {
@@ -189,12 +215,12 @@ function overrideDefaultsWithOptions(options, next) {
       console.log('angryMessage set to '.cyan +
         hulken.settings.angryMessage.toString().bold.magenta);
     }
-    if(options.minWaitTime) {
+    if (options.minWaitTime) {
       hulken.settings.minWaitTime = options.minWaitTime;
       console.log('minWaitTime set to '.cyan +
         hulken.settings.minWaitTime.toString().bold.magenta);
     }
-    if(options.maxWaitTime) {
+    if (options.maxWaitTime) {
       hulken.settings.maxWaitTime = options.maxWaitTime;
       console.log('maxWaitTime set to '.cyan +
         hulken.settings.maxWaitTime.toString().bold.magenta);
@@ -424,7 +450,8 @@ function requestExecuted(reqPath, responseTime) {
     stats.totalSecondsElapsed = hulkenExecutionTime;
     stats.avgReqResponseTime = hulken.getAvgResponseTime();
     stats.reqsPerSecond = (hulken.requests.length / hulkenExecutionTime);
-    stats.randomRequestWaitTime = (hulken.settings.minWaitTime/1000) + '-' + (hulken.settings.maxWaitTime / 1000);
+    stats.randomRequestWaitTime = (hulken.settings.minWaitTime / 1000) + '-' +
+      (hulken.settings.maxWaitTime / 1000);
     stats.slowRequests = hulken.slowRequests;
     stats.failedRequests = hulken.failedRequests;
     finsish(hulkenExecutionTime, stats);
@@ -480,7 +507,8 @@ function printStats(stats) {
   console.log('avg response time (in seconds)  ' + stats.avgReqResponseTime.toFixed(
     4).magenta);
   console.log('req/sec ' + stats.reqsPerSecond.toFixed(2).magenta);
-  console.log('random request wait time (in seconds) ' + stats.randomRequestWaitTime.magenta);
+  console.log('random request wait time (in seconds) ' + stats.randomRequestWaitTime
+    .magenta);
   console.log('******************************************'.bold.cyan);
 }
 
