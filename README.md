@@ -95,7 +95,7 @@ POSTs require a payload.
 When you use hulken from the command line, you should first install it globally.  
 `npm install hulken -g`
 
-and then you can use the *hulken* command:
+and then you can use the *hulken* command to run a stress test:
 ```
 hulken myCustomOptions.json
 ```
@@ -106,7 +106,12 @@ The options file is a simple json and looks something like this.
 “requestsFilePath”: “../path/to/hulkenRequests.json”
 }
 ```  
-**You can set the same settings in this file as when you require hulken in your code and passing in an options object.**  
+Hulken can even generate an example options file for you, all you have to do is provide the target url.
+```
+hulken make_options http://localhost:8080
+```
+
+**You can set the same settings in this options file as when you require hulken in your code and passing in an options object.**  
 *See Usage (as a library).* Options files make it easy to reuse your requestsFile against different environments.
 
 ##hulken_informant's
@@ -119,6 +124,11 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.7.0** (non breaking changes only)
+* Hulken can now generate an example options file when executed from the command line.
+ ```hulken make_options http://localhost:8080``` will create
+an example options file with http://localhost:8080 as the targetUrl.
+
 **0.6.1** (minor bug fix)
 * stats object returned now containing correct randomRequestWaitTime
 
