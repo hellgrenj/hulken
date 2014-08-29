@@ -17,18 +17,34 @@ if (process.argv.length > 2) { // something more than 'node(index 0) hulken(inde
       if (!appUrl) {
         console.log('you have to provide the url!'.red.inverse);
       } else {
-        console.log("generating a minimal options file for: ".green + appUrl.magenta);
         var hulken_options = {
           targetUrl: appUrl,
-          requestsFilePath: './hulkenRequestsFile.json'
+          requestsFilePath: './hulkenRequestsFile.json',
+          timesToRunEachRequest: 10,
+          numberOfHulkenAgents: 10,
+          happyTimeLimit: 10,
+          slowRequestsTimeLimit: 0.5,
+          angryOnFailedRequest: true,
+          chatty: true,
+          happyMessage: "HULKEN PLEASED, YOU MAY CONTINUE WITH YOUR DAY!",
+          angryMessage: "HULKEN ANGRY! HULKEN SMASH!",
+          minWaitTime: 500,
+          maxWaitTime: 2000,
+          tokensSkippingRequest: [':','{','}']
         };
         fs.writeFile('./options.json', JSON.stringify(
           hulken_options), function(err) {
           if (err) {
             console.log(err.toString().red.inverse);
           } else {
-            console.log('a minimal options.json is created!'.green);
-            console.log('see other settings you can override and their default values at: https://github.com/hellgrenj/hulken#usage-as-a-library'.grey.inverse);
+            console.log('');
+            console.log('an example options.json was created:'.green.inverse);
+            console.log('');
+            console.log(JSON.stringify(hulken_options,null,4));
+            console.log('');
+            console.log('see other settings you can override and their default values at:'.white.inverse)
+            console.log('https://github.com/hellgrenj/hulken#usage-as-a-library'.white.inverse);
+            console.log('');
           }
         });
       }
@@ -42,7 +58,6 @@ if (process.argv.length > 2) { // something more than 'node(index 0) hulken(inde
       });
     }
   }
-
 }
 
 var hulken = this;
