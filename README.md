@@ -106,7 +106,7 @@ The options file is a simple json and looks something like this.
 “requestsFilePath”: “../path/to/hulkenRequests.json”
 }
 ```  
-Hulken can even generate an example options file for you, all you have to do is provide the target url.
+**NEW!** Hulken can even generate an example options file for you, all you have to do is provide the target url.
 ```
 hulken make_options http://localhost:8080
 ```
@@ -118,9 +118,12 @@ hulken make_options http://localhost:8080
 an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!
 
 [hulken_informant_express3 (works with express3)](https://www.npmjs.org/package/hulken_informant_express3)  
-[hulken_informant_hapi (works with hapi.js)](https://www.npmjs.org/package/hulken_informant_hapi)
+[hulken_informant_hapi (works with hapi.js)](https://www.npmjs.org/package/hulken_informant_hapi)  
+**missing your framework?**  
+feel free to create a *hulken_informant_x* and send me the link
 
 ##Blog posts
+**NEW!** [The shortest path to stress tests ](http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests)  
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
