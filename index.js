@@ -6,6 +6,7 @@ var fs = require('fs');
 var printer = require('./lib/printer.js');
 var util = require('./lib/util.js');
 
+var index = this;
 //  command line entry point
 if (process.argv.length > 2) {
   if (process.argv[2]) {
@@ -18,7 +19,7 @@ if (process.argv.length > 2) {
       fs.readFile(pathToOptionsFile, 'utf-8', function(err, data) {
         if (err) throw err;
         var hulken_options = JSON.parse(data);
-        this.run(function() {}, function() {}, hulken_options);
+        index.run(function() {}, function() {}, hulken_options);
       });
     }
   }
