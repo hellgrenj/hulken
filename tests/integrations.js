@@ -27,7 +27,7 @@ var runHulkenTestSuite = function() {
     happyMessage: "HULKEN HAPPY!",
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
-    maxWaitTime: 2000
+    maxWaitTime: 3000
   };
   testStart = Date.now();
   hulken.run(function(stats) {
