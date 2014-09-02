@@ -127,6 +127,9 @@ feel free to create a *hulken_informant_x* and send me the link
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.7.1** (non breaking changes only)
+* code refactoring and minor fixes
+
 **0.7.0** (non breaking changes only)
 * Hulken can now generate an example options file when executed from the command line.
  ```hulken make_options http://localhost:8080``` will create
