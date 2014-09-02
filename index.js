@@ -5,6 +5,7 @@ var fs = require('fs');
 //  internal deps
 var printer = require('./lib/printer.js');
 var util = require('./lib/util.js');
+var hulken = require('./lib/hulken.js');
 
 var index = this;
 //  command line entry point
@@ -26,7 +27,6 @@ if (process.argv.length > 2) {
 }
 
 //  entry point when required
-var hulken = require('./lib/hulken.js');
 exports.run = function(error, success, options) {
   hulken.smash(error, success, options);
 };
