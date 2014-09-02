@@ -8,18 +8,19 @@ var numberOfHulkenAgentsInTest = 50;
 
 console.log('..::Hulken Integration tests::..'.bold.inverse.cyan);
 console.log('');
-var runHulkenTestSuite = function(){
+var runHulkenTestSuite = function() {
   console.log('.. calling on hulken'.bold.inverse.cyan);
   console.log('');
 
 
-  var hulken = require('../hulken.js');
+  var hulken = require('../index.js');
   var hulken_options = {
     targetUrl: 'http://127.0.0.1:5656',
     requestsFilePath: './tests/hulkenRequests.json',
     timesToRunEachRequest: 1,
     numberOfHulkenAgents: numberOfHulkenAgentsInTest,
     happyTimeLimit: 10,
+    loginRequired: false,
     slowRequestsTimeLimit: 0.5,
     angryOnFailedRequest: false,
     chatty: false,
@@ -29,17 +30,17 @@ var runHulkenTestSuite = function(){
     maxWaitTime: 2000
   };
   testStart = Date.now();
-  hulken.run(function(stats){
-      console.log(stats);
-      verify(stats,hulken_options); // we do not care about the performance of our testWebServer..
+  hulken.run(function(stats) {
+    console.log(stats);
+    verify(stats, hulken_options); // we do not care about the performance of our testWebServer..
   }, function(stats) {
 
-      verify(stats,hulken_options);
+    verify(stats, hulken_options);
   }, hulken_options);
 };
 
-function verify(stats, hulken_options){
-  try{
+function verify(stats, hulken_options) {
+  try {
     expect(stats).to.exist;
     expect(stats).to.have.property('numberOfConcurrentRequests');
     expect(stats.numberOfConcurrentRequests).to.be.ok();
@@ -53,17 +54,22 @@ function verify(stats, hulken_options){
     expect(stats.reqsPerSecond).to.be.ok();
     expect(stats).to.have.property('randomRequestWaitTime');
     expect(stats.randomRequestWaitTime).to.be.ok();
-    expect(stats.randomRequestWaitTime).to.equal((hulken_options.minWaitTime/1000) +'-'+ (hulken_options.maxWaitTime/1000));
+    expect(stats.randomRequestWaitTime).to.equal((hulken_options.minWaitTime /
+      1000) + '-' + (hulken_options.maxWaitTime / 1000));
     expect(stats).to.have.property('numberOfHulkenAgents');
     expect(stats.numberOfHulkenAgents).to.be.ok();
 
     expect(stats.numberOfConcurrentRequests).to.equal(testWebServer.getReqsReceived());
 
     //since timesToRunEachRequest is set to 1
-    expect(stats.numberOfUniqueRequests).to.equal(testWebServer.getReqsReceived() / numberOfHulkenAgentsInTest);
-    expect(testWebServer.getStartPageReqsReceived()).to.equal(numberOfHulkenAgentsInTest);
-    expect(testWebServer.getSomeotherPageReqsReceived()).to.equal(numberOfHulkenAgentsInTest);
-    expect(testWebServer.getPostsToStartPage()).to.equal(numberOfHulkenAgentsInTest);
+    expect(stats.numberOfUniqueRequests).to.equal(testWebServer.getReqsReceived() /
+      numberOfHulkenAgentsInTest);
+    expect(testWebServer.getStartPageReqsReceived()).to.equal(
+      numberOfHulkenAgentsInTest);
+    expect(testWebServer.getSomeotherPageReqsReceived()).to.equal(
+      numberOfHulkenAgentsInTest);
+    expect(testWebServer.getPostsToStartPage()).to.equal(
+      numberOfHulkenAgentsInTest);
     expect(stats.failedRequests).to.have.length(numberOfHulkenAgentsInTest); //one request is looking for a wrong expectedTextToExist
 
     var postValues = testWebServer.getPostVars();
@@ -73,7 +79,7 @@ function verify(stats, hulken_options){
 
     // if we get here without expect throwing any errors..
     passTest();
-  }catch(expectError){
+  } catch (expectError) {
     printMaxNumberOfConnections();
     console.log('.. Integration tests failed! =('.bold.inverse.red);
     console.log(expectError.stack.toString().bold.inverse.red);
@@ -82,23 +88,28 @@ function verify(stats, hulken_options){
   }
 
 }
-function passTest(){
+
+function passTest() {
   printMaxNumberOfConnections();
   testStop = Date.now();
-  var testExecutionTime = (testStop - testStart)/ 1000;
+  var testExecutionTime = (testStop - testStart) / 1000;
   console.log('.. Integration tests passed! =)'.bold.inverse.green);
   printExecutionTime();
   console.log('');
   process.exit(code = 0);
 }
-function printMaxNumberOfConnections(){
+
+function printMaxNumberOfConnections() {
   console.log(('maximum number of http connections during test:' +
-  testWebServer.getMaxNumberOfConcurrentConnections().toString()).bold.inverse.grey);
+      testWebServer.getMaxNumberOfConcurrentConnections().toString()).bold.inverse
+    .grey);
 }
-function printExecutionTime(){
+
+function printExecutionTime() {
   testStop = Date.now();
-  var testExecutionTime = (testStop - testStart)/ 1000;
-  console.log(('.. execution time: ' + testExecutionTime + ' seconds').bold.inverse.green);
+  var testExecutionTime = (testStop - testStart) / 1000;
+  console.log(('.. execution time: ' + testExecutionTime + ' seconds').bold.inverse
+    .green);
 }
 
 //start the test http server and then start the test
