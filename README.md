@@ -127,6 +127,9 @@ feel free to create a *hulken_informant_x* and send me the link
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.7.2** (bug fixes)
+* fixed a bug that came with the latest refactoring
+
 **0.7.1** (non breaking changes only)
 * code refactoring and minor fixes
 
@@ -146,19 +149,6 @@ an example options file with http://localhost:8080 as the targetUrl.
 * pass in "chatty: false" to make Hulken less chatty!
 * happyMessage can now be passed in as an option
 * angryMessage can now be passed in as an option
-
-**0.4.0** (non breaking changes only)
-* angryOnFailedRequest can now be passed in as an option
-* now returning all failed requests (http errors, wrong expectedTextToExist etc) not only connection errors
-
-
-**0.3.1** (non breaking changes only)
-* added a new hulken informant for hapi.js
-
-**0.3.0**   (non breaking changes only)
-* Improved connection error handling
-* slowRequestsTimeLimit can now be passed in as an option
-* stats object now contains all slow requests and all failed requests
 
 ##Tests
 `npm test`
