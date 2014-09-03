@@ -127,7 +127,7 @@ feel free to create a *hulken_informant_x* and send me the link
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
-**0.7.2** (bug fixes)
+**0.7.3** (bug fixes)
 * fixed a bug that came with the latest refactoring
 
 **0.7.1** (non breaking changes only)
