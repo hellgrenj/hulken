@@ -74,7 +74,7 @@ The requestsFile is a json file and looks like this.
 “expectedTextToExist”: “thank you for your POST”,
 “payload”: {
 “foo”: “bar”
-}]
+}}]
 ```
 POSTs require a payload.
 
@@ -127,6 +127,9 @@ feel free to create a *hulken_informant_x* and send me the link
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.7.4** (non breaking changes only)
+* minor fixes
+
 **0.7.3** (bug fixes)
 * fixed a bug that came with the latest refactoring
 
