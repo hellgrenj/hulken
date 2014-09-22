@@ -55,6 +55,7 @@ hulken.run(function(stats){
 * **angryMessage** (".... BAD RESULT... HULKEN ANGRY!") | pass in what you want Hulken to say when Hulken is angry with a result
 * **minWaitTime** (1000) | minimum wait time in milliseconds (every request waits for a random time before executing)
 * **maxWaitTime** (6000) | maximum wait time in milliseconds (every request waits for a random time before executing)
+* **returnAllRequests** (false) | If true the stats object will contain all executed requests (stats.allRequests)
 
 The requestsFile is a json file and looks like this.  
 ```
@@ -106,7 +107,7 @@ The options file is a simple json and looks something like this.
 “requestsFilePath”: “../path/to/hulkenRequests.json”
 }
 ```  
-**NEW!** Hulken can even generate an example options file for you, all you have to do is provide the target url.
+Hulken can even generate an example options file for you, all you have to do is provide the target url.
 ```
 hulken make_options http://localhost:8080
 ```
@@ -123,10 +124,13 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 feel free to create a *hulken_informant_x* and send me the link
 
 ##Blog posts
-**NEW!** [The shortest path to stress tests ](http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests)  
+[The shortest path to stress tests ](http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests)  
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.8.0** (non breaking changes only)
+* pass in option "returnAllRequests: true" to include all executed requests (path and response time) in the stats object
+
 **0.7.4** (non breaking changes only)
 * minor fixes
 

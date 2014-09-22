@@ -27,14 +27,15 @@ var runHulkenTestSuite = function() {
     happyMessage: "HULKEN HAPPY!",
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
-    maxWaitTime: 3000
+    maxWaitTime: 3000,
+    returnAllRequests: true
   };
   testStart = Date.now();
   hulken.run(function(stats) {
-    console.log(stats);
+    //console.log(stats);
     verify(stats, hulken_options); // we do not care about the performance of our testWebServer..
   }, function(stats) {
-
+    //console.log(stats);
     verify(stats, hulken_options);
   }, hulken_options);
 };
@@ -77,6 +78,13 @@ function verify(stats, hulken_options) {
     expect(postValues.foo).to.be.ok();
     expect(postValues.foo).to.equal('bar');
 
+    if (hulken_options.returnAllRequests) {
+      expect(stats).to.have.property('allRequests');
+      expect(stats.allRequests).to.be.ok();
+      expect(stats.allRequests).to.have.length(stats.numberOfConcurrentRequests);
+    } else {
+      expect(stats).not.to.have.property('allRequests');
+    }
     // if we get here without expect throwing any errors..
     passTest();
   } catch (expectError) {
