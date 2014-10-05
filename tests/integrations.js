@@ -47,7 +47,6 @@ var runHulkenTestSuite = function() {
 
 function verify(stats, hulken_options) {
   try {
-    expect(stats).to.exist;
     expect(stats).to.have.property('numberOfConcurrentRequests');
     expect(stats.numberOfConcurrentRequests).to.be.ok();
     expect(stats).to.have.property('numberOfUniqueRequests');
@@ -64,10 +63,9 @@ function verify(stats, hulken_options) {
       1000) + '-' + (hulken_options.maxWaitTime / 1000));
     expect(stats).to.have.property('numberOfHulkenAgents');
     expect(stats.numberOfHulkenAgents).to.be.ok();
-
     expect(stats.numberOfConcurrentRequests).to.equal(testWebServer.getReqsReceived());
 
-    //since timesToRunEachRequest is set to 1
+    //.....since timesToRunEachRequest is set to 1
     expect(stats.numberOfUniqueRequests).to.equal(testWebServer.getReqsReceived() /
       numberOfHulkenAgentsInTest);
     expect(testWebServer.getStartPageReqsReceived()).to.equal(
@@ -78,32 +76,13 @@ function verify(stats, hulken_options) {
       numberOfHulkenAgentsInTest);
     expect(stats.failedRequests).to.have.length(numberOfHulkenAgentsInTest); //one request is looking for a wrong expectedTextToExist
 
-    var postValues = testWebServer.getPostVars();
-    expect(postValues).to.have.property('foo');
-    expect(postValues.foo).to.be.ok();
-    expect(postValues.foo).to.equal('bar');
-
-    if (hulken_options.returnAllRequests) {
-      expect(stats).to.have.property('allRequests');
-      expect(stats.allRequests).to.be.ok();
-      expect(stats.allRequests).to.have.length(stats.numberOfConcurrentRequests);
-    } else {
-      expect(stats).not.to.have.property('allRequests');
-    }
-
-    if (hulken_options.headers) {
-      var headersFromGets = testWebServer.getHeadersFromGets();
-      expect(headersFromGets['accept-encoding']).to.be('Overriden');
-      for (var key in hulken_options.headers) {
-        if (hulken_options.headers.hasOwnProperty(key)) {
-          expect(testWebServer.getHeadersFromGets()).to.have.property(key);
-          expect(testWebServer.getHeadersFromPosts()).to.have.property(key);
-        }
-      }
-    }
+    veryPostValues();
+    verify_returnAllRequests(stats, hulken_options);
+    verify_headers(hulken_options);
 
     // if we get here without expect throwing any errors..
     passTest();
+
   } catch (expectError) {
     printMaxNumberOfConnections();
     console.log('.. Integration tests failed! =('.bold.inverse.red);
@@ -114,6 +93,33 @@ function verify(stats, hulken_options) {
 
 }
 
+function veryPostValues(){
+  var postValues = testWebServer.getPostVars();
+  expect(postValues).to.have.property('foo');
+  expect(postValues.foo).to.be.ok();
+  expect(postValues.foo).to.equal('bar');
+}
+function verify_returnAllRequests(stats, hulken_options){
+  if (hulken_options.returnAllRequests) {
+    expect(stats).to.have.property('allRequests');
+    expect(stats.allRequests).to.be.ok();
+    expect(stats.allRequests).to.have.length(stats.numberOfConcurrentRequests);
+  } else {
+    expect(stats).not.to.have.property('allRequests');
+  }
+}
+function verify_headers(hulken_options){
+  if (hulken_options.headers) {
+    var headersFromGets = testWebServer.getHeadersFromGets();
+    expect(headersFromGets['accept-encoding']).to.be('Overriden');
+    for (var key in hulken_options.headers) {
+      if (hulken_options.headers.hasOwnProperty(key)) {
+        expect(testWebServer.getHeadersFromGets()).to.have.property(key);
+        expect(testWebServer.getHeadersFromPosts()).to.have.property(key);
+      }
+    }
+  }
+}
 function passTest() {
   printMaxNumberOfConnections();
   testStop = Date.now();
