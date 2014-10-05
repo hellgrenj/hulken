@@ -21,6 +21,14 @@ var post = '';
 exports.getPostVars = function() {
   return post;
 };
+var headersFromGets = null;
+exports.getHeadersFromGets = function() {
+  return headersFromGets;
+};
+var headersFromPosts = null;
+exports.getHeadersFromPosts = function() {
+  return headersFromPosts;
+};
 var maxNumberOfConcurrentConnections = 0;
 function setMaxNumberOfConcurrentConnections(numberOfConnections){
   if(numberOfConnections > maxNumberOfConcurrentConnections){
@@ -38,6 +46,7 @@ exports.start = function(next) {
     reqsReceived++;
     var uri = url.parse(req.url).pathname;
     if (req.method === 'GET') {
+      headersFromGets = req.headers;
       if (uri == "/") {
         startPageReqsReceived++;
         res.writeHead(200, {
@@ -59,6 +68,7 @@ exports.start = function(next) {
         respond404(res);
       }
     } else if (req.method === 'POST') {
+      headersFromPosts = req.headers;
       if (uri == "/") {
         postsToStartPage++;
         var body = '';

@@ -1,6 +1,6 @@
 {
   "name": "hulken",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Hulken is a small tool for simple stress testing of web applications.It can be required and used in your code but it can also be used as a stand-alone command line tool.",
   "main": "index.js",
   "dependencies": {

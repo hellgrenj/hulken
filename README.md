@@ -56,6 +56,7 @@ hulken.run(function(stats){
 * **minWaitTime** (1000) | minimum wait time in milliseconds (every request waits for a random time before executing)
 * **maxWaitTime** (6000) | maximum wait time in milliseconds (every request waits for a random time before executing)
 * **returnAllRequests** (false) | If true the stats object will contain all executed requests (stats.allRequests)
+* **headers** ({}) | set HTTP headers in a simple object: {'key1', 'value1', 'key2', 'value2'}. These headers will be set for every request in the test.
 
 The requestsFile is a json file and looks like this.  
 ```
@@ -128,8 +129,11 @@ feel free to create a *hulken_informant_x* and send me the link
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.9.0** (non breaking changes only)
+* set HTTP headers for every request in the test by passing in the option ```headers : {'key1' : 'value1', 'key2' : 'value2'}```
+
 **0.8.0** (non breaking changes only)
-* pass in option "returnAllRequests: true" to include all executed requests (path and response time) in the stats object
+* pass in option ```returnAllRequests: true``` to include all executed requests (path and response time) in the stats object
 
 **0.7.4** (non breaking changes only)
 * minor fixes

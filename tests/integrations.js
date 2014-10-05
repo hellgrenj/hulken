@@ -28,7 +28,12 @@ var runHulkenTestSuite = function() {
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
     maxWaitTime: 3000,
-    returnAllRequests: true
+    returnAllRequests: true,
+    headers: {
+      "key1": "value1",
+      "key2": "value2",
+      "accept-encoding" : "Overriden"
+    }
   };
   testStart = Date.now();
   hulken.run(function(stats) {
@@ -85,6 +90,18 @@ function verify(stats, hulken_options) {
     } else {
       expect(stats).not.to.have.property('allRequests');
     }
+
+    if (hulken_options.headers) {
+      var headersFromGets = testWebServer.getHeadersFromGets();
+      expect(headersFromGets['accept-encoding']).to.be('Overriden');
+      for (var key in hulken_options.headers) {
+        if (hulken_options.headers.hasOwnProperty(key)) {
+          expect(testWebServer.getHeadersFromGets()).to.have.property(key);
+          expect(testWebServer.getHeadersFromPosts()).to.have.property(key);
+        }
+      }
+    }
+
     // if we get here without expect throwing any errors..
     passTest();
   } catch (expectError) {
