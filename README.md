@@ -131,6 +131,7 @@ feel free to create a *hulken_informant_x* and send me the link
 ##Release notes
 **0.9.0** (non breaking changes only)
 * set HTTP headers for every request in the test by passing in the option ```headers : {'key1' : 'value1', 'key2' : 'value2'}```
+* minor code refactoring
 
 **0.8.0** (non breaking changes only)
 * pass in option ```returnAllRequests: true``` to include all executed requests (path and response time) in the stats object
