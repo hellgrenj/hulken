@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Hulken by hellgrenj</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Hulken</h1>
+        <h2>a small node tool for simple stress testing of web applications. It can be required and used in your node code but it can also be used as a stand alone command line tool. When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/hellgrenj/hulken/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/hellgrenj/hulken/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/hellgrenj/hulken" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="hulken" class="anchor" href="#hulken"><span class="octicon octicon-link"></span></a>hulken</h1>
+
+<p>Hulken is a small tool for simple stress testing of web applications. It can be required and used in your code but it can also be used as a stand-alone command line tool.
+When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>when used as a lib in your app/build script install it locally<br><code>npm install hulken --save</code></p>
+
+<p>when used as a command line tool<br><code>npm install hulken -g</code></p>
+
+<h2>
+<a name="usage-as-a-library" class="anchor" href="#usage-as-a-library"><span class="octicon octicon-link"></span></a>Usage (as a library)</h2>
+
+<p>When you require hulken in your node application.</p>
+
+<pre><code>var hulken = require('hulken');
+
+var hulken_options = {  
+  targetUrl: 'http://localhost:8888',  
+  requestsFilePath: './path/to/my/app/hulkenRequests.json'
+};  
+
+hulken.run(function(stats){  
+  console.log('error ... perhaps i should look closer at the stats');  
+  },function(stats){  
+  console.log('success! ... auto tweet my stats to the world!');  
+},hulken_options);
+
+</code></pre>
+
+<p><strong>targetUrl</strong> and <strong>requestsFilePath</strong> are mandatory, but you can also override the following settings:</p>
+
+<blockquote>
+<p><strong>setting name</strong> (default value) | explanation  </p>
+</blockquote>
+
+<ul>
+<li>
+<strong>targetUrl</strong> ("http://localhost") | url to application under test<br>
+</li>
+<li>
+<strong>numberOfHulkenAgents</strong> (1) | number of agents sending requests</li>
+<li>
+<strong>timesToRunEachRequest</strong> (1) | number of times to execute each request per agent<br>
+</li>
+<li>
+<strong>requestsFilePath</strong> ("./hulkenRequests.json") | path to requestsFile (including file name)<br>
+</li>
+<li>
+<strong>tokensSkippingRequest</strong> ([':']) | requests with urls containing one or more of these chars gets ignored<br>
+</li>
+<li>
+<strong>requestsToSkip</strong> (['/logout', 'signoff']) | requests with urls matching one of the provided urls gets ignored</li>
+<li>
+<strong>loginRequired</strong> (false) | is a login required to execute the requests?</li>
+<li>
+<strong>username</strong> ("") | mandatory if loginRequired is true ... the username</li>
+<li>
+<strong>password</strong> ("") | mandatory if loginRequired is true ... the password</li>
+<li>
+<strong>usernamePostName</strong> ("username") | the username post name</li>
+<li>
+<strong>passwordPostName</strong> ("password") | the password post name</li>
+<li>
+<strong>loginUrl</strong> ("/login") | the url to post to when logging in</li>
+<li>
+<strong>loginResponseExpectedText</strong> ("") | a text which hulken searches for in the response to the login post (if non is provided hulken will consider http 200 OK good enough)</li>
+<li>
+<strong>happyTimeLimit</strong> (10) | max test suite duration (in seconds). If the whole test takes longer than this value hulken gets angry.</li>
+<li>
+<strong>slowRequestsTimeLimit</strong> (3) | response times (in seconds) over this value are considered slow</li>
+<li>
+<strong>angryOnFailedRequest</strong> (false) | Hulken gets angry (calls error callback) if a single request fails</li>
+<li>
+<strong>chatty</strong> (true) | set to false to make Hulken less chatty</li>
+<li>
+<strong>happyMessage</strong> ("HULKEN PLEASED WITH RESULT, NO ONE NEEDS TO GET HURT TODAY!") | pass in what you want Hulken to say when Hulken is happy with a result</li>
+<li>
+<strong>angryMessage</strong> (".... BAD RESULT... HULKEN ANGRY!") | pass in what you want Hulken to say when Hulken is angry with a result</li>
+<li>
+<strong>minWaitTime</strong> (1000) | minimum wait time in milliseconds (every request waits for a random time before executing)</li>
+<li>
+<strong>maxWaitTime</strong> (6000) | maximum wait time in milliseconds (every request waits for a random time before executing)</li>
+<li>
+<strong>returnAllRequests</strong> (false) | If true the stats object will contain all executed requests (stats.allRequests)</li>
+<li>
+<strong>headers</strong> ({}) | set HTTP headers in a simple object: {'key1', 'value1', 'key2', 'value2'}. These headers will be set for every request in the test.</li>
+</ul><p>The requestsFile is a json file and looks like this.  </p>
+
+<pre><code>[{
+“method”:”get”,
+“path”:”/index”,
+“expectedTextToExist”:”Start”
+},
+{
+“method”:”get”,
+“path”:”/about”,
+“expectedTextToExist”:”About us”
+},
+{
+“method”: “post”,
+“path”: “/”,
+“expectedTextToExist”: “thank you for your POST”,
+“payload”: {
+“foo”: “bar”
+}}]
+</code></pre>
+
+<p>POSTs require a payload.</p>
+
+<p><strong>The stats object returned looks like this.</strong></p>
+
+<pre><code>{ numberOfHulkenAgents: 50,
+  numberOfConcurrentRequests: 150,
+  numberOfUniqueRequests: 3,
+  totalSecondsElapsed: 6.001,
+  avgReqResponseTime: 0.001806666666666668,
+  reqsPerSecond: 24.995834027662056,
+  randomRequestWaitTime: '1-6 seconds',
+  slowRequests: [],
+  failedRequests: [] }
+</code></pre>
+
+<h2>
+<a name="usage-as-a-command-line-tool" class="anchor" href="#usage-as-a-command-line-tool"><span class="octicon octicon-link"></span></a>Usage (as a command line tool)</h2>
+
+<p>When you use hulken from the command line, you should first install it globally.<br><code>npm install hulken -g</code></p>
+
+<p>and then you can use the <em>hulken</em> command to run a stress test:</p>
+
+<pre><code>hulken myCustomOptions.json
+</code></pre>
+
+<p>The options file is a simple json and looks something like this.</p>
+
+<pre><code>{
+“targetUrl” : “http://yourapp.com”,
+“requestsFilePath”: “../path/to/hulkenRequests.json”
+}
+</code></pre>
+
+<p>Hulken can even generate an example options file for you, all you have to do is provide the target url.</p>
+
+<pre><code>hulken make_options http://localhost:8080
+</code></pre>
+
+<p><strong>You can set the same settings in this options file as when you require hulken in your code and passing in an options object.</strong><br><em>See Usage (as a library).</em> Options files make it easy to reuse your requestsFile against different environments.</p>
+
+<h2>
+<a name="hulken_informants" class="anchor" href="#hulken_informants"><span class="octicon octicon-link"></span></a>hulken_informant's</h2>
+
+<p>an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!</p>
+
+<p><a href="https://www.npmjs.org/package/hulken_informant_express3">hulken_informant_express3 (works with express3)</a><br><a href="https://www.npmjs.org/package/hulken_informant_hapi">hulken_informant_hapi (works with hapi.js)</a><br><strong>missing your framework?</strong><br>
+feel free to create a <em>hulken_informant_x</em> and send me the link</p>
+
+<h2>
+<a name="blog-posts" class="anchor" href="#blog-posts"><span class="octicon octicon-link"></span></a>Blog posts</h2>
+
+<p><a href="http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests">The shortest path to stress tests </a><br><a href="http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and">Automatically generated stress tests with hulken and hulken informant</a></p>
+
+<h2>
+<a name="release-notes" class="anchor" href="#release-notes"><span class="octicon octicon-link"></span></a>Release notes</h2>
+
+<p><strong>0.9.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>set HTTP headers for every request in the test by passing in the option <code>headers : {'key1' : 'value1', 'key2' : 'value2'}</code>
+</li>
+<li>minor code refactoring</li>
+</ul><p><strong>0.8.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>pass in option <code>returnAllRequests: true</code> to include all executed requests (path and response time) in the stats object</li>
+</ul><p><strong>0.7.4</strong> (non breaking changes only)</p>
+
+<ul>
+<li>minor fixes</li>
+</ul><p><strong>0.7.3</strong> (bug fixes)</p>
+
+<ul>
+<li>fixed a bug that came with the latest refactoring</li>
+</ul><p><strong>0.7.1</strong> (non breaking changes only)</p>
+
+<ul>
+<li>code refactoring and minor fixes</li>
+</ul><p><strong>0.7.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>Hulken can now generate an example options file when executed from the command line.
+<code>hulken make_options http://localhost:8080</code> will create
+an example options file with http://localhost:8080 as the targetUrl.</li>
+</ul><p><strong>0.6.1</strong> (minor bug fix)</p>
+
+<ul>
+<li>stats object returned now containing correct randomRequestWaitTime</li>
+</ul><p><strong>0.6.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>minWaitTime can now be passed in as an option</li>
+<li>maxWaitTime can now be passed in as an option</li>
+</ul><p><strong>0.5.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>pass in "chatty: false" to make Hulken less chatty!</li>
+<li>happyMessage can now be passed in as an option</li>
+<li>angryMessage can now be passed in as an option</li>
+</ul><h2>
+<a name="tests" class="anchor" href="#tests"><span class="octicon octicon-link"></span></a>Tests</h2>
+
+<p><code>npm test</code></p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Released under the MIT license. Copyright (c) 2014 Johan Hellgren.</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
