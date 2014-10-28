@@ -65,16 +65,19 @@ function verify(stats, hulken_options) {
     expect(stats.numberOfHulkenAgents).to.be.ok();
     expect(stats.numberOfConcurrentRequests).to.equal(testWebServer.getReqsReceived());
 
-    //.....since timesToRunEachRequest is set to 1
+
     expect(stats.numberOfUniqueRequests).to.equal(testWebServer.getReqsReceived() /
-      numberOfHulkenAgentsInTest);
+      (numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest));
     expect(testWebServer.getStartPageReqsReceived()).to.equal(
-      numberOfHulkenAgentsInTest);
+      numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
     expect(testWebServer.getSomeotherPageReqsReceived()).to.equal(
-      numberOfHulkenAgentsInTest);
+      numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
     expect(testWebServer.getPostsToStartPage()).to.equal(
-      numberOfHulkenAgentsInTest);
-    expect(stats.failedRequests).to.have.length(numberOfHulkenAgentsInTest); //one request is looking for a wrong expectedTextToExist
+      numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
+
+    //one request is looking for a wrong expectedTextToExist
+    expect(stats.failedRequests).to.have.length(numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
+
 
     veryPostValues();
     verify_returnAllRequests(stats, hulken_options);
