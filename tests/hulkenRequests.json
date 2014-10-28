@@ -1,7 +1,7 @@
 [{
   "method": "get",
   "path": "/another",
-  "expectedTextToExist": "you have reached another page!WrongOnPurpose!" 
+  "expectedTextToExist": "you have reached another page!WrongOnPurpose!"
 }, {
   "method": "get",
   "path": "/someother",
@@ -16,5 +16,15 @@
   "expectedTextToExist": "you have sent me a POST request",
   "payload": {
     "foo": "bar"
+  }
+},
+{
+  "method": "post",
+  "path": "/Random",
+  "expectedTextToExist": "you have sent /Random a POST request",
+  "payload": {
+    "foo": "bar",
+    "test" : "::random lettersandnumbers 10",
+    "test2" : "::random numbers 4"
   }
 }]

@@ -79,6 +79,7 @@ function verify(stats, hulken_options) {
     veryPostValues();
     verify_returnAllRequests(stats, hulken_options);
     verify_headers(hulken_options);
+    verify_randomized_post_values(hulken_options);
 
     // if we get here without expect throwing any errors..
     passTest();
@@ -119,6 +120,10 @@ function verify_headers(hulken_options){
       }
     }
   }
+}
+function verify_randomized_post_values(hulken_options){
+  var randomPayloads = testWebServer.getRandomPayload();
+  console.log(randomPayloads);
 }
 function passTest() {
   printMaxNumberOfConnections();

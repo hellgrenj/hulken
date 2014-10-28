@@ -21,6 +21,10 @@ var post = '';
 exports.getPostVars = function() {
   return post;
 };
+var randomPayload = [];
+exports.getRandomPayload = function() {
+  return randomPayload;
+};
 var headersFromGets = null;
 exports.getHeadersFromGets = function() {
   return headersFromGets;
@@ -82,6 +86,18 @@ exports.start = function(next) {
           'Content-Type': 'text/plain'
         });
         res.end('you have sent me a POST request');
+      } else if (uri == "/Random"){
+        var payload = '';
+        req.on('data', function(data) {
+          payload += data; // this is a test http server - so no need for FLOOD checks etc..
+        });
+        req.on('end', function() {
+          randomPayload.push(payload);
+        });
+        res.writeHead(200, {
+          'Content-Type': 'text/plain'
+        });
+        res.end('you have sent /Random a POST request');
       } else {
         respond404(res);
       }
