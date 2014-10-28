@@ -23,7 +23,7 @@ var runHulkenTestSuite = function() {
     loginRequired: false,
     slowRequestsTimeLimit: 0.5,
     angryOnFailedRequest: false,
-    chatty: false,
+    chatty: true,
     happyMessage: "HULKEN HAPPY!",
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
@@ -32,7 +32,7 @@ var runHulkenTestSuite = function() {
     headers: {
       "key1": "value1",
       "key2": "value2",
-      "accept-encoding" : "Overriden"
+      "accept-encoding": "Overriden"
     }
   };
   testStart = Date.now();
@@ -94,13 +94,14 @@ function verify(stats, hulken_options) {
 
 }
 
-function veryPostValues(){
+function veryPostValues() {
   var postValues = testWebServer.getPostVars();
   expect(postValues).to.have.property('foo');
   expect(postValues.foo).to.be.ok();
   expect(postValues.foo).to.equal('bar');
 }
-function verify_returnAllRequests(stats, hulken_options){
+
+function verify_returnAllRequests(stats, hulken_options) {
   if (hulken_options.returnAllRequests) {
     expect(stats).to.have.property('allRequests');
     expect(stats.allRequests).to.be.ok();
@@ -109,7 +110,8 @@ function verify_returnAllRequests(stats, hulken_options){
     expect(stats).not.to.have.property('allRequests');
   }
 }
-function verify_headers(hulken_options){
+
+function verify_headers(hulken_options) {
   if (hulken_options.headers) {
     var headersFromGets = testWebServer.getHeadersFromGets();
     expect(headersFromGets['accept-encoding']).to.be('Overriden');
@@ -121,10 +123,21 @@ function verify_headers(hulken_options){
     }
   }
 }
-function verify_randomized_post_values(hulken_options){
+
+function verify_randomized_post_values(hulken_options) {
   var randomPayloads = testWebServer.getRandomPayload();
-  console.log(randomPayloads);
+  expect(randomPayloads.length).to.equal(numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
+  var uniqueRandomPostValues = [];
+  randomPayloads.forEach(function(str) {
+    var payload = JSON.parse(str);
+    for (var property in payload) {
+      expect(uniqueRandomPostValues).to.not.contain(payload[property]);
+      uniqueRandomPostValues.push(payload[property]);
+    }
+  });
 }
+
+
 function passTest() {
   printMaxNumberOfConnections();
   testStop = Date.now();

@@ -23,8 +23,8 @@
   "path": "/Random",
   "expectedTextToExist": "you have sent /Random a POST request",
   "payload": {
-    "foo": "bar",
-    "test" : "::random lettersandnumbers 10",
-    "test2" : "::random numbers 4"
+    "random" : "::random lettersandnumbers 10",
+    "random2" : "::random numbers 4",
+    "random3" : "::random letters 20"
   }
 }]
