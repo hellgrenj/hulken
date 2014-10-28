@@ -3,7 +3,7 @@ hulken
 
 Hulken is a small tool for simple stress testing of web applications. It can be required and used in your code but it can also be used as a stand-alone command line tool.
 When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.
-***Hulken is Swedish for 'The Hulk'***
+*Hulken is Swedish for 'The Hulk'*
 
 ##Installation
 when used as a lib in your app/build script install it locally  
