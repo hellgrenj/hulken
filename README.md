@@ -3,7 +3,7 @@ hulken
 
 Hulken is a small tool for simple stress testing of web applications. It can be required and used in your code but it can also be used as a stand-alone command line tool.
 When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.
-
+***Hulken is Swedish for 'The Hulk'***
 
 ##Installation
 when used as a lib in your app/build script install it locally  
@@ -78,7 +78,30 @@ The requestsFile is a json file and looks like this.
 “foo”: “bar”
 }}]
 ```
+**about POST's**
+<a name="moreOnPosts"></a>
+
 POSTs require a payload.
+
+Besides hard coded values (see "bar" in the example above) you can let hulken generate random post values consisting of letters, numbers or letters and numbers. The syntax is as follows:
+
+`::random <valuetype> <numberOfChars>`
+
+available value types are **numbers**, **letters** and **lettersandnumbers**.
+
+For example, the request below will send a POST to the url */random* with a payload consisting of 3 generated property values. *random* will be a 10 characters long string of letters and numbers. *random2* will be a 15 characters long string of numbers. *random3* will be a 20 characters long string of letters.
+```
+{
+  "method": "post",
+  "path": "/random",
+  "expectedTextToExist": "thank you for the random value",
+  "payload": {
+    "random": "::random lettersandnumbers 10",
+    "random2": "::random numbers 15",
+    "random3": "::random letters 20"
+  }
+```
+(*When using the **::random** command a randomly generated value is created every time the request gets executed. If you run multiple iterations (i.e hulken_options.timesToRunEachRequest > 1) every request will get a new randomly generated value*)
 
 **The stats object returned looks like this.**
 ```
@@ -124,11 +147,17 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 **missing your framework?**  
 feel free to create a *hulken_informant_x* and send me the link
 
+##Smash responsibly!
+Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. **IT IS YOUR FOOT! =)** Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the target under test and the machine executing the test.
 ##Blog posts
 [The shortest path to stress tests ](http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests)  
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+**0.10.0** (non breaking changes only)
+* hulken can now generate random post values. (instead of {"foo" : "bar"} you do {"foo" : "::random letters 10"}. read more about it [here](#moreOnPosts).
+
+
 **0.9.0** (non breaking changes only)
 * set HTTP headers for every request in the test by passing in the option ```headers : {'key1' : 'value1', 'key2' : 'value2'}```
 * minor code refactoring

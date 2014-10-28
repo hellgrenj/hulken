@@ -23,7 +23,7 @@ var runHulkenTestSuite = function() {
     loginRequired: false,
     slowRequestsTimeLimit: 0.5,
     angryOnFailedRequest: false,
-    chatty: true,
+    chatty: false,
     happyMessage: "HULKEN HAPPY!",
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
