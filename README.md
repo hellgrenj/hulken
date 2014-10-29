@@ -3,7 +3,7 @@ hulken
 
 Hulken is a small tool for simple stress testing of web applications. It can be required and used in your code but it can also be used as a stand-alone command line tool.
 When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.
-*Hulken is Swedish for 'The Hulk'*
+Hulken is Swedish for The Hulk.
 
 ##Installation
 when used as a lib in your app/build script install it locally  
@@ -87,7 +87,7 @@ Besides hard coded values (see "bar" in the example above) you can let hulken ge
 
 `::random <valuetype> <numberOfChars>`
 
-available value types are **numbers**, **letters** and **lettersandnumbers**.
+available value types are **numbers** [0-9], **letters** [A-Za-z] and **lettersandnumbers** [A-Za-z0-9].
 
 For example, the request below will send a POST to the url */random* with a payload consisting of 3 generated property values. *random* will be a 10 characters long string of letters and numbers. *random2* will be a 15 characters long string of numbers. *random3* will be a 20 characters long string of letters.
 ```
@@ -156,6 +156,7 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 ##Release notes
 **0.10.0** (non breaking changes only)
 * hulken can now generate random post values. (instead of {"foo" : "bar"} you do {"foo" : "::random letters 10"}. read more about it [here](#moreOnPosts).
+* minor refactoring (mostly improving integration tests)
 
 
 **0.9.0** (non breaking changes only)
