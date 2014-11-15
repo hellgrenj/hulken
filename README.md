@@ -61,21 +61,21 @@ hulken.run(function(stats){
 The requestsFile is a json file and looks like this.  
 ```
 [{
-“method”:”get”,
-“path”:”/index”,
-“expectedTextToExist”:”Start”
+"method":"get",
+"path":"/index",
+"expectedTextToExist":"Start"
 },
 {
-“method”:”get”,
-“path”:”/about”,
-“expectedTextToExist”:”About us”
+"method":"get",
+"path":"/about",
+"expectedTextToExist":"About us"
 },
 {
-“method”: “post”,
-“path”: “/”,
-“expectedTextToExist”: “thank you for your POST”,
-“payload”: {
-“foo”: “bar”
+"method": "post",
+"path": "/",
+"expectedTextToExist": "thank you for your POST",
+"payload": {
+"foo": "bar"
 }}]
 ```
 **about POST's**
@@ -100,6 +100,7 @@ For example, the request below will send a POST to the url */random* with a payl
     "random2": "::random numbers 15",
     "random3": "::random letters 20"
   }
+}
 ```
 (*When using the **::random** command a randomly generated value is created every time the request gets executed. If you run multiple iterations (i.e hulken_options.timesToRunEachRequest > 1) every request will get a new randomly generated value*)
 
@@ -127,8 +128,8 @@ hulken myCustomOptions.json
 The options file is a simple json and looks something like this.
 ```
 {
-“targetUrl” : “http://yourapp.com”,
-“requestsFilePath”: “../path/to/hulkenRequests.json”
+"targetUrl" : "http://yourapp.com",
+"requestsFilePath": "../path/to/hulkenRequests.json"
 }
 ```  
 Hulken can even generate an example options file for you, all you have to do is provide the target url.
@@ -154,6 +155,10 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+
+**0.10.1** (non breaking changes only)
+* minor fixes
+
 **0.10.0** (non breaking changes only)
 * hulken can now generate random post values. (instead of {"foo" : "bar"} you do {"foo" : "::random letters 10"}. read more about it [here](#moreOnPosts).
 * minor refactoring (mostly improving integration tests)
@@ -180,17 +185,6 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
  ```hulken make_options http://localhost:8080``` will create
 an example options file with http://localhost:8080 as the targetUrl.
 
-**0.6.1** (minor bug fix)
-* stats object returned now containing correct randomRequestWaitTime
-
-**0.6.0** (non breaking changes only)
-* minWaitTime can now be passed in as an option
-* maxWaitTime can now be passed in as an option
-
-**0.5.0** (non breaking changes only)
-* pass in "chatty: false" to make Hulken less chatty!
-* happyMessage can now be passed in as an option
-* angryMessage can now be passed in as an option
 
 ##Tests
 `npm test`
