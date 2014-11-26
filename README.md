@@ -102,7 +102,7 @@ For example, the request below will send a POST to the url */random* with a payl
   }
 }
 ```
-(*When using the **::random** command a randomly generated value is created every time the request gets executed. If you run multiple iterations (i.e hulken_options.timesToRunEachRequest > 1) every request will get a new randomly generated value*)
+(When using the **::random** command a randomly generated value is created every time the request gets executed. If you run multiple iterations (i.e hulken_options.timesToRunEachRequest > 1) every request will get a new randomly generated value*)
 
 **The stats object returned looks like this.**
 ```
@@ -155,6 +155,9 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 [Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
 
 ##Release notes
+
+**0.10.2** (non breaking changes only)
+* removed unnecessary dependency on async
 
 **0.10.1** (non breaking changes only)
 * minor fixes
