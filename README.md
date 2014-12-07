@@ -73,8 +73,13 @@ hulken options.json
 
 ##Documentation
 [1.) Settings you can override through options ](#settings)  
-[2.) Dynamic payloads ](#dynamicPayloads)
-
+[2.) Dynamic payloads ](#dynamicPayloads)  
+[3.) The stats ](#dynamicPayloads)  
+[4.) automatically generate requests   files with Informants ](#dynamicPayloads)  
+[5.) Smash responsibly - It is your foot!  ](#dynamicPayloads)  
+[6.) Blog posts ](#dynamicPayloads)  
+[7.) Release notes ](#dynamicPayloads)  
+[8.) Tests ](#dynamicPayloads)
 
 ###Settings
 <a name="settings"></a>
