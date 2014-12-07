@@ -1,20 +1,15 @@
 hulken
 ======
 
-Hulken is a small tool for simple stress testing of web applications. It can be required and used in your code but it can also be used as a stand-alone command line tool.
-When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.
-Hulken is Swedish for The Hulk.
+Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool. *Hulken is swedish for The Hulk*.
 
-##Installation
-when used as a lib in your app/build script install it locally  
+
+##Quick Examples
+###as a library:
+
 `npm install hulken --save`
 
-when used as a command line tool  
-`npm install hulken -g`
 
-##Usage (as a library)
-
-When you require hulken in your node application.
 ```
 var hulken = require('hulken');
 
@@ -26,12 +21,63 @@ var hulken_options = {
 hulken.run(function(stats){  
   console.log('error ... perhaps i should look closer at the stats');  
   },function(stats){  
-  console.log('success! ... auto tweet my stats to the world!');  
-},hulken_options);
+    console.log('success! ... auto tweet my stats to the world!');  
+    },hulken_options);
 
 ```
-**targetUrl** and **requestsFilePath** are mandatory, but you can also override the following settings:
+*(you can override a lot of default settings, see documentation)*
 
+the **requestsFilePath** (hulkentRequests.json) points to a file like this:
+```
+[{
+  "method":"get",
+  "path":"/index",
+  "expectedTextToExist":"Start"
+ },
+ {
+    "method":"get",
+    "path":"/about",
+    "expectedTextToExist":"About us"
+ },
+ {
+    "method": "post",
+    "path": "/",
+    "expectedTextToExist": "thank you   for your POST",
+    "payload": {
+      "foo": "bar"
+     }
+}]
+```
+*(you can also send dynamic post values, see documentation)*
+
+###as a command line tool
+
+`npm install hulken -g`
+
+Create a 'options.json' file with the following content.
+the **requestsFilePath** point to the same hulkenRequests.json as in the example above (as a library). Make sure you have one!
+```
+{
+  "targetUrl" : "http://yourapp.com",
+  "requestsFilePath": "../path/to/hulkenRequests.json"
+}
+```
+*(you can have hulken generate an example options for you, see documentation)*
+
+
+and then you can use the **hulken** command to run a stress test:
+```
+hulken options.json
+```
+
+
+##Documentation
+[1.) Settings you can override through options ](#settings)  
+[2.) Dynamic payloads ](#dynamicPayloads)
+
+
+###Settings
+<a name="settings"></a>
 >**setting name** (default value) | explanation  
 
 * **targetUrl** ("http://localhost") | url to application under test  
@@ -58,27 +104,8 @@ hulken.run(function(stats){
 * **returnAllRequests** (false) | If true the stats object will contain all executed requests (stats.allRequests)
 * **headers** ({}) | set HTTP headers in a simple object: {'key1', 'value1', 'key2', 'value2'}. These headers will be set for every request in the test.
 
-The requestsFile is a json file and looks like this.  
-```
-[{
-"method":"get",
-"path":"/index",
-"expectedTextToExist":"Start"
-},
-{
-"method":"get",
-"path":"/about",
-"expectedTextToExist":"About us"
-},
-{
-"method": "post",
-"path": "/",
-"expectedTextToExist": "thank you for your POST",
-"payload": {
-"foo": "bar"
-}}]
-```
-**about POST's**
+<a name="dynamicPayloads"></a>
+###Dynamic payloads
 <a name="moreOnPosts"></a>
 
 POSTs require a payload.
