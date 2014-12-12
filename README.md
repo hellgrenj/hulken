@@ -83,8 +83,9 @@ hulken options.json
 [8.) Tests ](#tests)  
 [9.) License ](#license)
 
-###Settings
 <a name="settings"></a>
+###Settings
+
 When you use hulken as a library you override these settings in the options object you pass in. When you use hulken as a command line tool you override these settings in the options file.
 
 >**setting name** (default value) | explanation  
@@ -122,8 +123,9 @@ When you use hulken as a library you override these settings in the options obje
   }
 
 
-###Dynamic payloads
 <a name="dynamicPayloads"></a>
+###Dynamic payloads
+
 
 POSTs require a payload.
 
@@ -172,8 +174,9 @@ and then in your requests file have a post that looks like this:
 }
 ```
 
-###The stats
 <a name="theStats"></a>
+###The stats
+
 When you use hulken as a library you get callbacks with stats. This is what this stats object looks like. This object can also contain **allRequests** see [Settings](#settings)
 ```
 { numberOfHulkenAgents: 50,
@@ -187,8 +190,9 @@ When you use hulken as a library you get callbacks with stats. This is what this
   failedRequests: [] }
 ```
 
-###Command line tricks
 <a name="commandLineTricks"></a>
+###Command line tricks
+
 
 Hulken can generate an example options file for you, all you have to do is provide the target url.
 ```
@@ -196,8 +200,9 @@ hulken make_options http://localhost:8080
 ```
 
 
-###Automatically generate requests files with Informants
 <a name="informants"></a>
+###Automatically generate requests files with Informants
+
 an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!
 
 [hulken_informant_express3 (works with express3)](https://www.npmjs.org/package/hulken_informant_express3)  
@@ -206,12 +211,14 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 **missing your framework?**  
 feel free to create a *hulken_informant_x* and send me the link
 
-###Smash responsibly!
 <a name="smashResponsibly"></a>
+###Smash responsibly!
+
 Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. **IT IS YOUR FOOT! =)** Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the application under test and the machine executing the test.
 
-###Release notes
 <a name="releaseNotes"></a>
+###Release notes
+
 **1.0.0** (non breaking changes only)
 * hulken can now pick post payloads randomly from value lists, [see documentation](#dynamicPayloads)
 * cleaned up README
@@ -250,12 +257,14 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 an example options file with http://localhost:8080 as the targetUrl.
 
 
-###Tests
 <a name="tests"></a>
+###Tests
+
 `npm test`
 
-###License
 <a name="license"></a>
+###License
+
 Released under the MIT license. Copyright (c) 2014 Johan Hellgren.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
