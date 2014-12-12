@@ -15,7 +15,7 @@ var hulken = require('hulken');
 
 var hulken_options = {  
   targetUrl: 'http://localhost:8888',  
-  requestsFilePath: './path/to/my/app/hulkenRequests.json'
+  requestsFilePath: './path/to/my/hulkenRequests.json'
 };  
 
 hulken.run(function(stats){  
@@ -25,9 +25,9 @@ hulken.run(function(stats){
     },hulken_options);
 
 ```
-*(you can override a lot of default settings, see documentation)*
+*(you can override a lot of default settings, [see documentation](#settings))*
 
-the **requestsFilePath** (hulkentRequests.json) points to a file like this:
+the **requestsFilePath** points to a json file like this:
 ```
 [{
   "method":"get",
@@ -42,47 +42,51 @@ the **requestsFilePath** (hulkentRequests.json) points to a file like this:
  {
     "method": "post",
     "path": "/",
-    "expectedTextToExist": "thank you   for your POST",
+    "expectedTextToExist": "thank you for your POST",
     "payload": {
       "foo": "bar"
      }
 }]
 ```
-*(you can also send dynamic post values, see documentation)*
+*(you can also send dynamic payloads, [see documentation ](#dynamicPayloads)  )*  
+**checkout ./tests/integrations.js for more examples!**
 
 ###as a command line tool
 
 `npm install hulken -g`
 
 Create a 'options.json' file with the following content.
-the **requestsFilePath** point to the same hulkenRequests.json as in the example above (as a library). Make sure you have one!
+the **requestsFilePath** points to the same hulkenRequests.json as in the example above (as a library). Make sure you have one!
 ```
 {
   "targetUrl" : "http://yourapp.com",
-  "requestsFilePath": "../path/to/hulkenRequests.json"
+  "requestsFilePath": "./path/to/my/hulkenRequests.json"
 }
 ```
-*(you can have hulken generate an example options for you, see documentation)*
+*(you can have hulken generate an example options for you, [see documentation](#commandLineTricks))*
 
 
 and then you can use the **hulken** command to run a stress test:
 ```
 hulken options.json
 ```
-
+**option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)**
 
 ##Documentation
 [1.) Settings you can override through options ](#settings)  
 [2.) Dynamic payloads ](#dynamicPayloads)  
-[3.) The stats ](#dynamicPayloads)  
-[4.) automatically generate requests   files with Informants ](#dynamicPayloads)  
-[5.) Smash responsibly - It is your foot!  ](#dynamicPayloads)  
-[6.) Blog posts ](#dynamicPayloads)  
-[7.) Release notes ](#dynamicPayloads)  
-[8.) Tests ](#dynamicPayloads)
+[3.) The stats ](#theStats)  
+[4.) Command line tricks ](#commandLineTricks)  
+[5.) Automatically generate requests files with Informants ](#informants)  
+[6.) Smash responsibly - It is your foot!  ](#smashResponsibly)  
+[7.) Release notes ](#releaseNotes)  
+[8.) Tests ](#tests)  
+[9.) License ](#license)
 
 ###Settings
 <a name="settings"></a>
+When you use hulken as a library you override these settings in the options object you pass in. When you use hulken as a command line tool you override these settings in the options file.
+
 >**setting name** (default value) | explanation  
 
 * **targetUrl** ("http://localhost") | url to application under test  
@@ -107,15 +111,23 @@ hulken options.json
 * **minWaitTime** (1000) | minimum wait time in milliseconds (every request waits for a random time before executing)
 * **maxWaitTime** (6000) | maximum wait time in milliseconds (every request waits for a random time before executing)
 * **returnAllRequests** (false) | If true the stats object will contain all executed requests (stats.allRequests)
-* **headers** ({}) | set HTTP headers in a simple object: {'key1', 'value1', 'key2', 'value2'}. These headers will be set for every request in the test.
+* **headers** ({}) | set HTTP headers in a simple object: {
+  "key1": "value1",
+  "key2": "value2",
+  "accept-encoding": "Overriden"
+  }. These headers will be set for every request in the test.
+* **requestValueLists** ({}) | insert value lists in a simple object: {
+    usernames: ['john', 'jessica','admin'],
+    cities: ['Stockholm', 'London', 'Berlin', 'New York']
+  }
 
-<a name="dynamicPayloads"></a>
+
 ###Dynamic payloads
-<a name="moreOnPosts"></a>
+<a name="dynamicPayloads"></a>
 
 POSTs require a payload.
 
-Besides hard coded values (see "bar" in the example above) you can let hulken generate random post values consisting of letters, numbers or letters and numbers. The syntax is as follows:
+Besides hard coded values you can let hulken generate random post values consisting of letters, numbers or letters and numbers. The syntax is as follows:
 
 `::random <valuetype> <numberOfChars>`
 
@@ -134,9 +146,35 @@ For example, the request below will send a POST to the url */random* with a payl
   }
 }
 ```
-(When using the **::random** command a randomly generated value is created every time the request gets executed. If you run multiple iterations (i.e hulken_options.timesToRunEachRequest > 1) every request will get a new randomly generated value*)
 
-**The stats object returned looks like this.**
+You can also pass in **value lists** with your options file/object and have hulken pick randomly from these when executing the requests.
+
+The syntax in your request is as follows:  
+`::randomList <nameOfList>`
+
+in options pass in:
+```
+requestValueLists : {
+  usernames: ['john', 'jessica','admin'],
+  cities: ['Stockholm', 'London', 'Berlin', 'New York']
+}
+```
+and then in your requests file have a post that looks like this:
+```
+{
+  "method": "post",
+  "path": "/RandomList",
+  "expectedTextToExist": "you have sent /RandomList a POST request",
+  "payload": {
+    "username": "::randomList usernames",
+    "city" : "::randomList cities"
+  }
+}
+```
+
+###The stats
+<a name="theStats"></a>
+When you use hulken as a library you get callbacks with stats. This is what this stats object looks like. This object can also contain **allRequests** see [Settings](#settings)
 ```
 { numberOfHulkenAgents: 50,
   numberOfConcurrentRequests: 150,
@@ -149,44 +187,35 @@ For example, the request below will send a POST to the url */random* with a payl
   failedRequests: [] }
 ```
 
-##Usage (as a command line tool)
-When you use hulken from the command line, you should first install it globally.  
-`npm install hulken -g`
+###Command line tricks
+<a name="commandLineTricks"></a>
 
-and then you can use the *hulken* command to run a stress test:
-```
-hulken myCustomOptions.json
-```
-The options file is a simple json and looks something like this.
-```
-{
-"targetUrl" : "http://yourapp.com",
-"requestsFilePath": "../path/to/hulkenRequests.json"
-}
-```  
-Hulken can even generate an example options file for you, all you have to do is provide the target url.
+Hulken can generate an example options file for you, all you have to do is provide the target url.
 ```
 hulken make_options http://localhost:8080
 ```
 
-**You can set the same settings in this options file as when you require hulken in your code and passing in an options object.**  
-*See Usage (as a library).* Options files make it easy to reuse your requestsFile against different environments.
 
-##hulken_informant's
+###Automatically generate requests files with Informants
+<a name="informants"></a>
 an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!
 
 [hulken_informant_express3 (works with express3)](https://www.npmjs.org/package/hulken_informant_express3)  
-[hulken_informant_hapi (works with hapi.js)](https://www.npmjs.org/package/hulken_informant_hapi)  
+[hulken_informant_hapi (works with hapi.js 7)](https://www.npmjs.org/package/hulken_informant_hapi)  
+
 **missing your framework?**  
 feel free to create a *hulken_informant_x* and send me the link
 
-##Smash responsibly!
-Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. **IT IS YOUR FOOT! =)** Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the target under test and the machine executing the test.
-##Blog posts
-[The shortest path to stress tests ](http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests)  
-[Automatically generated stress tests with hulken and hulken informant](http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and)
+###Smash responsibly!
+<a name="smashResponsibly"></a>
+Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. **IT IS YOUR FOOT! =)** Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the application under test and the machine executing the test.
 
-##Release notes
+###Release notes
+<a name="releaseNotes"></a>
+**1.0.0** (non breaking changes only)
+* hulken can now pick post payloads randomly from value lists, [see documentation](#dynamicPayloads)
+* cleaned up README
+* added some tests
 
 **0.10.2** (non breaking changes only)
 * removed unnecessary dependency on async
@@ -221,10 +250,12 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 an example options file with http://localhost:8080 as the targetUrl.
 
 
-##Tests
+###Tests
+<a name="tests"></a>
 `npm test`
 
-##License
+###License
+<a name="license"></a>
 Released under the MIT license. Copyright (c) 2014 Johan Hellgren.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -25,6 +25,10 @@ var randomPayload = [];
 exports.getRandomPayload = function() {
   return randomPayload;
 };
+var randomListPayloadRequests = [];
+exports.getRandomListPayloadRequests = function() {
+  return randomListPayloadRequests;
+};
 var headersFromGets = null;
 exports.getHeadersFromGets = function() {
   return headersFromGets;
@@ -77,7 +81,7 @@ exports.start = function(next) {
         postsToStartPage++;
         var body = '';
         req.on('data', function(data) {
-          body += data; // this is a test http server - so no need for FLOOD checks etc..
+          body += data;
         });
         req.on('end', function() {
           post = JSON.parse(body);
@@ -89,7 +93,7 @@ exports.start = function(next) {
       } else if (uri == "/Random"){
         var payload = '';
         req.on('data', function(data) {
-          payload += data; // this is a test http server - so no need for FLOOD checks etc..
+          payload += data;
         });
         req.on('end', function() {
           randomPayload.push(payload);
@@ -98,7 +102,21 @@ exports.start = function(next) {
           'Content-Type': 'text/plain'
         });
         res.end('you have sent /Random a POST request');
-      } else {
+      }
+      else if (uri == "/RandomList"){
+        var randomListPayload = '';
+        req.on('data', function(data) {
+          randomListPayload += data;
+        });
+        req.on('end', function() {
+          randomListPayloadRequests.push(randomListPayload);
+        });
+        res.writeHead(200, {
+          'Content-Type': 'text/plain'
+        });
+        res.end('you have sent /RandomList a POST request');
+      }
+      else {
         respond404(res);
       }
     } else {
@@ -112,7 +130,7 @@ exports.start = function(next) {
       if(!err){
         setMaxNumberOfConcurrentConnections(connections);
       }
-    })
+    });
   }, 0);
 };
 

@@ -17,13 +17,13 @@ var runHulkenTestSuite = function() {
   var hulken_options = {
     targetUrl: 'http://127.0.0.1:5656',
     requestsFilePath: './tests/hulkenRequests.json',
-    timesToRunEachRequest: 1,
+    timesToRunEachRequest: 3,
     numberOfHulkenAgents: numberOfHulkenAgentsInTest,
     happyTimeLimit: 10,
     loginRequired: false,
     slowRequestsTimeLimit: 0.5,
     angryOnFailedRequest: false,
-    chatty: false,
+    chatty: true,
     happyMessage: "HULKEN HAPPY!",
     angryMessage: "HULKEN ANGRY!",
     minWaitTime: 500,
@@ -33,6 +33,10 @@ var runHulkenTestSuite = function() {
       "key1": "value1",
       "key2": "value2",
       "accept-encoding": "Overriden"
+    },
+    requestValueLists : {
+      usernames: ['john', 'jessica','admin'],
+      cities: ['Stockholm', 'London', 'Berlin', 'New York']
     }
   };
   testStart = Date.now();
@@ -83,6 +87,7 @@ function verify(stats, hulken_options) {
     verify_returnAllRequests(stats, hulken_options);
     verify_headers(hulken_options);
     verify_randomized_post_values(hulken_options);
+    verify_random_list_post_values(hulken_options);
 
     // if we get here without expect throwing any errors..
     passTest();
@@ -140,6 +145,10 @@ function verify_randomized_post_values(hulken_options) {
   });
 }
 
+function verify_random_list_post_values(hulken_options){
+  var randomListPayloads = testWebServer.getRandomListPayloadRequests();
+  expect(randomListPayloads.length).to.equal(numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
+}
 
 function passTest() {
   printMaxNumberOfConnections();

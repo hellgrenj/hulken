@@ -26,4 +26,12 @@
     "random2": "::random numbers 15",
     "random3": "::random letters 20"
   }
+}, {
+  "method": "post",
+  "path": "/RandomList",
+  "expectedTextToExist": "you have sent /RandomList a POST request",
+  "payload": {
+    "username": "::randomList usernames",
+    "city" : "::randomList cities"
+  }
 }]
