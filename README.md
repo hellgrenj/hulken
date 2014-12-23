@@ -219,6 +219,9 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 <a name="releaseNotes"></a>
 ###Release notes
 
+**1.0.1** (non breaking changes only)
+* minor fixes
+
 **1.0.0** (non breaking changes only)
 * hulken can now pick post payloads randomly from value lists, [see documentation](#dynamicPayloads)
 * cleaned up README

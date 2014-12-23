@@ -18,9 +18,12 @@ if (process.argv.length > 2) {
       var pathToOptionsFile = arg;
       printer.print('setting options from file '.cyan + pathToOptionsFile.bold.magenta);
       fs.readFile(pathToOptionsFile, 'utf-8', function(err, data) {
-        if (err) throw err;
-        var hulken_options = JSON.parse(data);
-        index.run(function() {}, function() {}, hulken_options);
+        if (err) {
+          printer.print('HULKEN ERROR: '.bold.green + err.toString().red);
+        }else{
+          var hulken_options = JSON.parse(data);
+          index.run(function() {}, function() {}, hulken_options);
+        }
       });
     }
   }
