@@ -207,7 +207,7 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 
 [hulken_informant_express3 (works with express3)](https://www.npmjs.org/package/hulken_informant_express3)  
 [hulken_informant_hapi (works with hapi.js 7)](https://www.npmjs.org/package/hulken_informant_hapi)  
-
+[hulken_informant_hapi8 (works with hapi.js 8)](https://www.npmjs.com/package/hulken_informant_hapi8)  
 **missing your framework?**  
 feel free to create a *hulken_informant_x* and send me the link
 
@@ -218,6 +218,10 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ###Release notes
+
+**1.0.2** (non breaking changes only)
+* corrected old link in make_options output
+* added new informant for hapi.js 8 to ReadMe
 
 **1.0.1** (non breaking changes only)
 * minor fixes
