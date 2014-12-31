@@ -3,65 +3,128 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
     <title>Hulken by hellgrenj</title>
   </head>
 
   <body>
-
     <header>
-      <div class="container">
+      <div class="inner">
         <h1>Hulken</h1>
-        <h2>a small node tool for simple stress testing of web applications. It can be required and used in your node code but it can also be used as a stand alone command line tool. When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.</h2>
-
-        <section id="downloads">
-          <a href="https://github.com/hellgrenj/hulken/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/hellgrenj/hulken/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/hellgrenj/hulken" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
+        <h2>Hulken is a stress testing tool for everything speaking HTTP</h2>
+        <a href="https://github.com/hellgrenj/hulken" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
 
-    <div class="container">
-      <section id="main_content">
-        <h1>
-<a name="hulken" class="anchor" href="#hulken"><span class="octicon octicon-link"></span></a>hulken</h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="hulken" class="anchor" href="#hulken" aria-hidden="true"><span class="octicon octicon-link"></span></a>hulken</h1>
 
-<p>Hulken is a small tool for simple stress testing of web applications. It can be required and used in your code but it can also be used as a stand-alone command line tool.
-When executed from the command line you get some nice output and when executed from within your code you get callbacks with stats.</p>
-
-<h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
-
-<p>when used as a lib in your app/build script install it locally<br><code>npm install hulken --save</code></p>
-
-<p>when used as a command line tool<br><code>npm install hulken -g</code></p>
+<p>Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool. <em>Hulken is swedish for The Hulk</em>.</p>
 
 <h2>
-<a name="usage-as-a-library" class="anchor" href="#usage-as-a-library"><span class="octicon octicon-link"></span></a>Usage (as a library)</h2>
+<a id="quick-examples" class="anchor" href="#quick-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Examples</h2>
 
-<p>When you require hulken in your node application.</p>
+<h3>
+<a id="as-a-library" class="anchor" href="#as-a-library" aria-hidden="true"><span class="octicon octicon-link"></span></a>as a library:</h3>
+
+<p><code>npm install hulken --save</code></p>
 
 <pre><code>var hulken = require('hulken');
 
 var hulken_options = {  
   targetUrl: 'http://localhost:8888',  
-  requestsFilePath: './path/to/my/app/hulkenRequests.json'
+  requestsFilePath: './path/to/my/hulkenRequests.json'
 };  
 
 hulken.run(function(stats){  
   console.log('error ... perhaps i should look closer at the stats');  
   },function(stats){  
-  console.log('success! ... auto tweet my stats to the world!');  
-},hulken_options);
+    console.log('success! ... auto tweet my stats to the world!');  
+    },hulken_options);
 
 </code></pre>
 
-<p><strong>targetUrl</strong> and <strong>requestsFilePath</strong> are mandatory, but you can also override the following settings:</p>
+<p><em>(you can override a lot of default settings, <a href="#settings">see documentation</a>)</em></p>
+
+<p>the <strong>requestsFilePath</strong> points to a json file like this:</p>
+
+<pre><code>[{
+  "method":"get",
+  "path":"/index",
+  "expectedTextToExist":"Start"
+ },
+ {
+    "method":"get",
+    "path":"/about",
+    "expectedTextToExist":"About us"
+ },
+ {
+    "method": "post",
+    "path": "/",
+    "expectedTextToExist": "thank you for your POST",
+    "payload": {
+      "foo": "bar"
+     }
+}]
+</code></pre>
+
+<p><em>(you can also send dynamic payloads, <a href="#dynamicPayloads">see documentation </a>  )</em><br>
+<strong>checkout ./tests/integrations.js for more examples!</strong></p>
+
+<h3>
+<a id="as-a-command-line-tool" class="anchor" href="#as-a-command-line-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>as a command line tool</h3>
+
+<p><code>npm install hulken -g</code></p>
+
+<p>Create a 'options.json' file with the following content.
+the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as in the example above (as a library). Make sure you have one!</p>
+
+<pre><code>{
+  "targetUrl" : "http://yourapp.com",
+  "requestsFilePath": "./path/to/my/hulkenRequests.json"
+}
+</code></pre>
+
+<p><em>(you can have hulken generate an example options for you, <a href="#commandLineTricks">see documentation</a>)</em></p>
+
+<p>and then you can use the <strong>hulken</strong> command to run a stress test:</p>
+
+<pre><code>hulken options.json
+</code></pre>
+
+<p><strong>option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)</strong></p>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p><a href="#settings">1.) Settings you can override through options </a><br>
+<a href="#dynamicPayloads">2.) Dynamic payloads </a><br>
+<a href="#theStats">3.) The stats </a><br>
+<a href="#commandLineTricks">4.) Command line tricks </a><br>
+<a href="#informants">5.) Automatically generate requests files with Informants </a><br>
+<a href="#smashResponsibly">6.) Smash responsibly - It is your foot!  </a><br>
+<a href="#releaseNotes">7.) Release notes </a><br>
+<a href="#tests">8.) Tests </a><br>
+<a href="#license">9.) License </a></p>
+
+<p><a name="settings"></a></p>
+
+<h3>
+<a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h3>
+
+<p>When you use hulken as a library you override these settings in the options object you pass in. When you use hulken as a command line tool you override these settings in the options file.</p>
 
 <blockquote>
 <p><strong>setting name</strong> (default value) | explanation  </p>
@@ -117,31 +180,77 @@ hulken.run(function(stats){
 <li>
 <strong>returnAllRequests</strong> (false) | If true the stats object will contain all executed requests (stats.allRequests)</li>
 <li>
-<strong>headers</strong> ({}) | set HTTP headers in a simple object: {'key1', 'value1', 'key2', 'value2'}. These headers will be set for every request in the test.</li>
-</ul><p>The requestsFile is a json file and looks like this.  </p>
+<strong>headers</strong> ({}) | set HTTP headers in a simple object: {
+"key1": "value1",
+"key2": "value2",
+"accept-encoding": "Overriden"
+}. These headers will be set for every request in the test.</li>
+<li>
+<strong>requestValueLists</strong> ({}) | insert value lists in a simple object: {
+usernames: ['john', 'jessica','admin'],
+cities: ['Stockholm', 'London', 'Berlin', 'New York']
+}</li>
+</ul>
 
-<pre><code>[{
-“method”:”get”,
-“path”:”/index”,
-“expectedTextToExist”:”Start”
-},
-{
-“method”:”get”,
-“path”:”/about”,
-“expectedTextToExist”:”About us”
-},
-{
-“method”: “post”,
-“path”: “/”,
-“expectedTextToExist”: “thank you for your POST”,
-“payload”: {
-“foo”: “bar”
-}}]
-</code></pre>
+<p><a name="dynamicPayloads"></a></p>
+
+<h3>
+<a id="dynamic-payloads" class="anchor" href="#dynamic-payloads" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic payloads</h3>
 
 <p>POSTs require a payload.</p>
 
-<p><strong>The stats object returned looks like this.</strong></p>
+<p>Besides hard coded values you can let hulken generate random post values consisting of letters, numbers or letters and numbers. The syntax is as follows:</p>
+
+<p><code>::random &lt;valuetype&gt; &lt;numberOfChars&gt;</code></p>
+
+<p>available value types are <strong>numbers</strong> [0-9], <strong>letters</strong> [A-Za-z] and <strong>lettersandnumbers</strong> [A-Za-z0-9].</p>
+
+<p>For example, the request below will send a POST to the url <em>/random</em> with a payload consisting of 3 generated property values. <em>random</em> will be a 10 characters long string of letters and numbers. <em>random2</em> will be a 15 characters long string of numbers. <em>random3</em> will be a 20 characters long string of letters.</p>
+
+<pre><code>{
+  "method": "post",
+  "path": "/random",
+  "expectedTextToExist": "thank you for the random value",
+  "payload": {
+    "random": "::random lettersandnumbers 10",
+    "random2": "::random numbers 15",
+    "random3": "::random letters 20"
+  }
+}
+</code></pre>
+
+<p>You can also pass in <strong>value lists</strong> with your options file/object and have hulken pick randomly from these when executing the requests.</p>
+
+<p>The syntax in your request is as follows:<br>
+<code>::randomList &lt;nameOfList&gt;</code></p>
+
+<p>in options pass in:</p>
+
+<pre><code>requestValueLists : {
+  usernames: ['john', 'jessica','admin'],
+  cities: ['Stockholm', 'London', 'Berlin', 'New York']
+}
+</code></pre>
+
+<p>and then in your requests file have a post that looks like this:</p>
+
+<pre><code>{
+  "method": "post",
+  "path": "/RandomList",
+  "expectedTextToExist": "you have sent /RandomList a POST request",
+  "payload": {
+    "username": "::randomList usernames",
+    "city" : "::randomList cities"
+  }
+}
+</code></pre>
+
+<p><a name="theStats"></a></p>
+
+<h3>
+<a id="the-stats" class="anchor" href="#the-stats" aria-hidden="true"><span class="octicon octicon-link"></span></a>The stats</h3>
+
+<p>When you use hulken as a library you get callbacks with stats. This is what this stats object looks like. This object can also contain <strong>allRequests</strong> see <a href="#settings">Settings</a></p>
 
 <pre><code>{ numberOfHulkenAgents: 50,
   numberOfConcurrentRequests: 150,
@@ -154,46 +263,81 @@ hulken.run(function(stats){
   failedRequests: [] }
 </code></pre>
 
-<h2>
-<a name="usage-as-a-command-line-tool" class="anchor" href="#usage-as-a-command-line-tool"><span class="octicon octicon-link"></span></a>Usage (as a command line tool)</h2>
+<p><a name="commandLineTricks"></a></p>
 
-<p>When you use hulken from the command line, you should first install it globally.<br><code>npm install hulken -g</code></p>
+<h3>
+<a id="command-line-tricks" class="anchor" href="#command-line-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command line tricks</h3>
 
-<p>and then you can use the <em>hulken</em> command to run a stress test:</p>
-
-<pre><code>hulken myCustomOptions.json
-</code></pre>
-
-<p>The options file is a simple json and looks something like this.</p>
-
-<pre><code>{
-“targetUrl” : “http://yourapp.com”,
-“requestsFilePath”: “../path/to/hulkenRequests.json”
-}
-</code></pre>
-
-<p>Hulken can even generate an example options file for you, all you have to do is provide the target url.</p>
+<p>Hulken can generate an example options file for you, all you have to do is provide the target url.</p>
 
 <pre><code>hulken make_options http://localhost:8080
 </code></pre>
 
-<p><strong>You can set the same settings in this options file as when you require hulken in your code and passing in an options object.</strong><br><em>See Usage (as a library).</em> Options files make it easy to reuse your requestsFile against different environments.</p>
+<p><a name="informants"></a></p>
 
-<h2>
-<a name="hulken_informants" class="anchor" href="#hulken_informants"><span class="octicon octicon-link"></span></a>hulken_informant's</h2>
+<h3>
+<a id="automatically-generate-requests-files-with-informants" class="anchor" href="#automatically-generate-requests-files-with-informants" aria-hidden="true"><span class="octicon octicon-link"></span></a>Automatically generate requests files with Informants</h3>
 
 <p>an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!</p>
 
-<p><a href="https://www.npmjs.org/package/hulken_informant_express3">hulken_informant_express3 (works with express3)</a><br><a href="https://www.npmjs.org/package/hulken_informant_hapi">hulken_informant_hapi (works with hapi.js)</a><br><strong>missing your framework?</strong><br>
+<p><a href="https://www.npmjs.org/package/hulken_informant_express3">hulken_informant_express3 (works with express3)</a><br>
+<a href="https://www.npmjs.org/package/hulken_informant_hapi">hulken_informant_hapi (works with hapi.js 7)</a><br>
+<a href="https://www.npmjs.com/package/hulken_informant_hapi8">hulken_informant_hapi8 (works with hapi.js 8)</a><br>
+<strong>missing your framework?</strong><br>
 feel free to create a <em>hulken_informant_x</em> and send me the link</p>
 
-<h2>
-<a name="blog-posts" class="anchor" href="#blog-posts"><span class="octicon octicon-link"></span></a>Blog posts</h2>
+<p><a name="smashResponsibly"></a></p>
 
-<p><a href="http://hellgrenj.tumblr.com/post/96170338318/the-shortest-path-to-stress-tests">The shortest path to stress tests </a><br><a href="http://hellgrenj.tumblr.com/post/90755234673/automatically-generated-stress-tests-with-hulken-and">Automatically generated stress tests with hulken and hulken informant</a></p>
+<h3>
+<a id="smash-responsibly" class="anchor" href="#smash-responsibly" aria-hidden="true"><span class="octicon octicon-link"></span></a>Smash responsibly!</h3>
 
-<h2>
-<a name="release-notes" class="anchor" href="#release-notes"><span class="octicon octicon-link"></span></a>Release notes</h2>
+<p>Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. <strong>IT IS YOUR FOOT! =)</strong> Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the application under test and the machine executing the test.</p>
+
+<p><a name="releaseNotes"></a></p>
+
+<h3>
+<a id="release-notes" class="anchor" href="#release-notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release notes</h3>
+
+<p><strong>1.0.2</strong> (non breaking changes only)</p>
+
+<ul>
+<li>corrected old link in make_options output</li>
+<li>added new informant for hapi.js 8 to ReadMe</li>
+</ul>
+
+<p><strong>1.0.1</strong> (non breaking changes only)</p>
+
+<ul>
+<li>minor fixes</li>
+</ul>
+
+<p><strong>1.0.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>hulken can now pick post payloads randomly from value lists, <a href="#dynamicPayloads">see documentation</a>
+</li>
+<li>cleaned up README</li>
+<li>added some tests</li>
+</ul>
+
+<p><strong>0.10.2</strong> (non breaking changes only)</p>
+
+<ul>
+<li>removed unnecessary dependency on async</li>
+</ul>
+
+<p><strong>0.10.1</strong> (non breaking changes only)</p>
+
+<ul>
+<li>minor fixes</li>
+</ul>
+
+<p><strong>0.10.0</strong> (non breaking changes only)</p>
+
+<ul>
+<li>hulken can now generate random post values. (instead of {"foo" : "bar"} you do {"foo" : "::random letters 10"}. read more about it <a href="#moreOnPosts">here</a>.</li>
+<li>minor refactoring (mostly improving integration tests)</li>
+</ul>
 
 <p><strong>0.9.0</strong> (non breaking changes only)</p>
 
@@ -201,50 +345,51 @@ feel free to create a <em>hulken_informant_x</em> and send me the link</p>
 <li>set HTTP headers for every request in the test by passing in the option <code>headers : {'key1' : 'value1', 'key2' : 'value2'}</code>
 </li>
 <li>minor code refactoring</li>
-</ul><p><strong>0.8.0</strong> (non breaking changes only)</p>
+</ul>
+
+<p><strong>0.8.0</strong> (non breaking changes only)</p>
 
 <ul>
 <li>pass in option <code>returnAllRequests: true</code> to include all executed requests (path and response time) in the stats object</li>
-</ul><p><strong>0.7.4</strong> (non breaking changes only)</p>
+</ul>
+
+<p><strong>0.7.4</strong> (non breaking changes only)</p>
 
 <ul>
 <li>minor fixes</li>
-</ul><p><strong>0.7.3</strong> (bug fixes)</p>
+</ul>
+
+<p><strong>0.7.3</strong> (bug fixes)</p>
 
 <ul>
 <li>fixed a bug that came with the latest refactoring</li>
-</ul><p><strong>0.7.1</strong> (non breaking changes only)</p>
+</ul>
+
+<p><strong>0.7.1</strong> (non breaking changes only)</p>
 
 <ul>
 <li>code refactoring and minor fixes</li>
-</ul><p><strong>0.7.0</strong> (non breaking changes only)</p>
+</ul>
+
+<p><strong>0.7.0</strong> (non breaking changes only)</p>
 
 <ul>
 <li>Hulken can now generate an example options file when executed from the command line.
 <code>hulken make_options http://localhost:8080</code> will create
 an example options file with http://localhost:8080 as the targetUrl.</li>
-</ul><p><strong>0.6.1</strong> (minor bug fix)</p>
+</ul>
 
-<ul>
-<li>stats object returned now containing correct randomRequestWaitTime</li>
-</ul><p><strong>0.6.0</strong> (non breaking changes only)</p>
+<p><a name="tests"></a></p>
 
-<ul>
-<li>minWaitTime can now be passed in as an option</li>
-<li>maxWaitTime can now be passed in as an option</li>
-</ul><p><strong>0.5.0</strong> (non breaking changes only)</p>
-
-<ul>
-<li>pass in "chatty: false" to make Hulken less chatty!</li>
-<li>happyMessage can now be passed in as an option</li>
-<li>angryMessage can now be passed in as an option</li>
-</ul><h2>
-<a name="tests" class="anchor" href="#tests"><span class="octicon octicon-link"></span></a>Tests</h2>
+<h3>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h3>
 
 <p><code>npm test</code></p>
 
-<h2>
-<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+<p><a name="license"></a></p>
+
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h3>
 
 <p>Released under the MIT license. Copyright (c) 2014 Johan Hellgren.</p>
 
@@ -265,9 +410,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.</p>
-      </section>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/hellgrenj/hulken/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/hellgrenj/hulken/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/hellgrenj/hulken"></a> is maintained by <a href="https://github.com/hellgrenj">hellgrenj</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    
+  
   </body>
 </html>
