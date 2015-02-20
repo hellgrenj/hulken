@@ -4,8 +4,8 @@ hulken
 Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool. *Hulken is swedish for The Hulk*.
 
 
-##Quick Examples
-###as a library:
+## Quick Examples
+### as a library:
 
 `npm install hulken --save`
 
@@ -51,7 +51,7 @@ the **requestsFilePath** points to a json file like this:
 *(you can also send dynamic payloads, [see documentation ](#dynamicPayloads)  )*  
 **checkout ./tests/integrations.js for more examples!**
 
-###as a command line tool
+### as a command line tool
 
 `npm install hulken -g`
 
@@ -72,7 +72,7 @@ hulken options.json
 ```
 **option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)**
 
-##Documentation
+## Documentation
 [1.) Settings you can override through options ](#settings)  
 [2.) Dynamic payloads ](#dynamicPayloads)  
 [3.) The stats ](#theStats)  
@@ -84,7 +84,7 @@ hulken options.json
 [9.) License ](#license)
 
 <a name="settings"></a>
-###Settings
+### Settings
 
 When you use hulken as a library you override these settings in the options object you pass in. When you use hulken as a command line tool you override these settings in the options file.
 
@@ -124,7 +124,7 @@ When you use hulken as a library you override these settings in the options obje
 
 
 <a name="dynamicPayloads"></a>
-###Dynamic payloads
+### Dynamic payloads
 
 
 POSTs require a payload.
@@ -175,7 +175,7 @@ and then in your requests file have a post that looks like this:
 ```
 
 <a name="theStats"></a>
-###The stats
+### The stats
 
 When you use hulken as a library you get callbacks with stats. This is what this stats object looks like. This object can also contain **allRequests** see [Settings](#settings)
 ```
@@ -191,7 +191,7 @@ When you use hulken as a library you get callbacks with stats. This is what this
 ```
 
 <a name="commandLineTricks"></a>
-###Command line tricks
+### Command line tricks
 
 
 Hulken can generate an example options file for you, all you have to do is provide the target url.
@@ -201,7 +201,7 @@ hulken make_options http://localhost:8080
 
 
 <a name="informants"></a>
-###Automatically generate requests files with Informants
+### Automatically generate requests files with Informants
 
 an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!
 
@@ -212,12 +212,14 @@ an hulken_informant offers a quick and simple way to create a stress test suite 
 feel free to create a *hulken_informant_x* and send me the link
 
 <a name="smashResponsibly"></a>
-###Smash responsibly!
+### Smash responsibly!
 
 Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. **IT IS YOUR FOOT! =)** Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the application under test and the machine executing the test.
 
 <a name="releaseNotes"></a>
-###Release notes
+### Release notes
+**1.0.3** (non breaking changes only)
+* only cleaned up some bad markdown in README.md
 
 **1.0.2** (non breaking changes only)
 * corrected old link in make_options output
@@ -265,12 +267,12 @@ an example options file with http://localhost:8080 as the targetUrl.
 
 
 <a name="tests"></a>
-###Tests
+### Tests
 
 `npm test`
 
 <a name="license"></a>
-###License
+### License
 
 Released under the MIT license. Copyright (c) 2014 Johan Hellgren.
 
