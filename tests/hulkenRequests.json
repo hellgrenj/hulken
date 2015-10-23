@@ -19,6 +19,12 @@
   }
 }, {
   "method": "post",
+  "path": "/NonStringPayload",
+  "payload": {
+    "foo": 1
+  }
+}, {
+  "method": "post",
   "path": "/Random",
   "expectedTextToExist": "you have sent /Random a POST request",
   "payload": {

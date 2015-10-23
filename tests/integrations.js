@@ -78,6 +78,8 @@ function verify(stats, hulken_options) {
       numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
     expect(testWebServer.getPostsToStartPage()).to.equal(
       numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
+    expect(testWebServer.getPostsToNonStringPayloadPage()).to.equal(
+      numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);
 
     //one request is looking for a wrong expectedTextToExist
     expect(stats.failedRequests).to.have.length(numberOfHulkenAgentsInTest * hulken_options.timesToRunEachRequest);

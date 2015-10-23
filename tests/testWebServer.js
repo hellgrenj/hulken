@@ -17,6 +17,10 @@ var postsToStartPage = 0;
 exports.getPostsToStartPage = function() {
   return postsToStartPage;
 };
+var postsToNonStringPayloadPage = 0;
+exports.getPostsToNonStringPayloadPage = function() {
+  return postsToNonStringPayloadPage;
+};
 var post = '';
 exports.getPostVars = function() {
   return post;
@@ -90,6 +94,12 @@ exports.start = function(next) {
           'Content-Type': 'text/plain'
         });
         res.end('you have sent me a POST request');
+      } else if (uri == "/NonStringPayload") {
+        postsToNonStringPayloadPage++;
+        res.writeHead(200, {
+          'Content-Type': 'text/plain'
+        });
+        res.end();
       } else if (uri == "/Random"){
         var payload = '';
         req.on('data', function(data) {
