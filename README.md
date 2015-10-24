@@ -218,14 +218,18 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ### Release notes
-**1.0.3** (non breaking changes only)
+**1.0.4**
+* fix for a bug caused by non-string payload value in the requests file (thanks to [mhoyer](https://github.com/mhoyer))
+* minor fixes
+
+**1.0.3**
 * only cleaned up some bad markdown in README.md
 
-**1.0.2** (non breaking changes only)
+**1.0.2**
 * corrected old link in make_options output
 * added new informant for hapi.js 8 to ReadMe
 
-**1.0.1** (non breaking changes only)
+**1.0.1**
 * minor fixes
 
 **1.0.0** (non breaking changes only)
@@ -233,34 +237,34 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 * cleaned up README
 * added some tests
 
-**0.10.2** (non breaking changes only)
+**0.10.2**
 * removed unnecessary dependency on async
 
-**0.10.1** (non breaking changes only)
+**0.10.1**
 * minor fixes
 
-**0.10.0** (non breaking changes only)
+**0.10.0**
 * hulken can now generate random post values. (instead of {"foo" : "bar"} you do {"foo" : "::random letters 10"}. read more about it [here](#moreOnPosts).
 * minor refactoring (mostly improving integration tests)
 
 
-**0.9.0** (non breaking changes only)
+**0.9.0**
 * set HTTP headers for every request in the test by passing in the option ```headers : {'key1' : 'value1', 'key2' : 'value2'}```
 * minor code refactoring
 
-**0.8.0** (non breaking changes only)
+**0.8.0**
 * pass in option ```returnAllRequests: true``` to include all executed requests (path and response time) in the stats object
 
-**0.7.4** (non breaking changes only)
+**0.7.4**
 * minor fixes
 
-**0.7.3** (bug fixes)
+**0.7.3**
 * fixed a bug that came with the latest refactoring
 
-**0.7.1** (non breaking changes only)
+**0.7.1**
 * code refactoring and minor fixes
 
-**0.7.0** (non breaking changes only)
+**0.7.0**
 * Hulken can now generate an example options file when executed from the command line.
  ```hulken make_options http://localhost:8080``` will create
 an example options file with http://localhost:8080 as the targetUrl.

@@ -15,7 +15,8 @@
   "path": "/",
   "expectedTextToExist": "you have sent me a POST request",
   "payload": {
-    "foo": "bar"
+    "foo": "bar",
+    "testarray" : []
   }
 }, {
   "method": "post",

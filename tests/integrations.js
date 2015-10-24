@@ -109,6 +109,10 @@ function veryPostValues() {
   expect(postValues).to.have.property('foo');
   expect(postValues.foo).to.be.ok();
   expect(postValues.foo).to.equal('bar');
+
+  expect(postValues).to.have.property('testarray');
+  expect(postValues.testarray).to.be.ok();
+  expect(postValues.testarray).to.be.an('array');
 }
 
 function verify_returnAllRequests(stats, hulken_options) {

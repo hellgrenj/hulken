@@ -1,6 +1,6 @@
 {
   "name": "hulken",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool.",
   "main": "index.js",
   "dependencies": {
