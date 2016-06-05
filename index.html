@@ -1,51 +1,60 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <meta name="description" content="Hulken : Hulken is a stress testing tool for everything speaking HTTP">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Hulken by hellgrenj</title>
+    <title>Hulken</title>
   </head>
 
   <body>
-    <header>
-      <div class="inner">
-        <h1>Hulken</h1>
-        <h2>Hulken is a stress testing tool for everything speaking HTTP</h2>
-        <a href="https://github.com/hellgrenj/hulken" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
-<a id="hulken" class="anchor" href="#hulken" aria-hidden="true"><span class="octicon octicon-link"></span></a>hulken</h1>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/hellgrenj/hulken">View on GitHub</a>
+
+          <h1 id="project_title">Hulken</h1>
+          <h2 id="project_tagline">Hulken is a stress testing tool for everything speaking HTTP</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/hellgrenj/hulken/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/hellgrenj/hulken/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="hulken" class="anchor" href="#hulken" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>hulken</h1>
 
 <p>Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool. <em>Hulken is swedish for The Hulk</em>.</p>
 
 <h2>
-<a id="quick-examples" class="anchor" href="#quick-examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick Examples</h2>
+<a id="quick-examples" class="anchor" href="#quick-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick Examples</h2>
 
 <h3>
-<a id="as-a-library" class="anchor" href="#as-a-library" aria-hidden="true"><span class="octicon octicon-link"></span></a>as a library:</h3>
+<a id="as-a-library" class="anchor" href="#as-a-library" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>as a library:</h3>
 
 <p><code>npm install hulken --save</code></p>
 
 <pre><code>var hulken = require('hulken');
 
+var myArrayOfRequests = [{
+    method: 'get',
+    path: '/',
+    expectedTextToExist: 'Welcome to the landing page'
+}];
+
 var hulken_options = {  
   targetUrl: 'http://localhost:8888',  
-  requestsFilePath: './path/to/my/hulkenRequests.json'
+  requestsArray: JSON.stringify(myArrayOfRequests),
 };  
 
 hulken.run(function(stats){  
@@ -58,7 +67,7 @@ hulken.run(function(stats){
 
 <p><em>(you can override a lot of default settings, <a href="#settings">see documentation</a>)</em></p>
 
-<p>the <strong>requestsFilePath</strong> points to a json file like this:</p>
+<p>instead of passing in the requests in requestsArray you can also set the  <strong>requestsFilePath</strong> (the value is the path) that points to a json file like this:</p>
 
 <pre><code>[{
   "method":"get",
@@ -84,12 +93,12 @@ hulken.run(function(stats){
 <strong>checkout ./tests/integrations.js for more examples!</strong></p>
 
 <h3>
-<a id="as-a-command-line-tool" class="anchor" href="#as-a-command-line-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>as a command line tool</h3>
+<a id="as-a-command-line-tool" class="anchor" href="#as-a-command-line-tool" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>as a command line tool</h3>
 
 <p><code>npm install hulken -g</code></p>
 
 <p>Create a 'options.json' file with the following content.
-the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as in the example above (as a library). Make sure you have one!</p>
+the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as in the example above (as a library). If you wish you can also pass in the list of requests inline (as a valid json string, escaping your double quotes) with <strong>requestsArray</strong>.</p>
 
 <pre><code>{
   "targetUrl" : "http://yourapp.com",
@@ -107,7 +116,7 @@ the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as 
 <p><strong>option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)</strong></p>
 
 <h2>
-<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
 
 <p><a href="#settings">1.) Settings you can override through options </a><br>
 <a href="#dynamicPayloads">2.) Dynamic payloads </a><br>
@@ -122,7 +131,7 @@ the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as 
 <p><a name="settings"></a></p>
 
 <h3>
-<a id="settings" class="anchor" href="#settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings</h3>
+<a id="settings" class="anchor" href="#settings" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Settings</h3>
 
 <p>When you use hulken as a library you override these settings in the options object you pass in. When you use hulken as a command line tool you override these settings in the options file.</p>
 
@@ -142,6 +151,8 @@ the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as 
 <li>
 <strong>requestsFilePath</strong> ("./hulkenRequests.json") | path to requestsFile (including file name)<br>
 </li>
+<li>
+<strong>requestsArray</strong> (undefined) | an array of hulken requests as a json string (see Quick Examples - as a library). Overrides requestsFilePath if both are present.</li>
 <li>
 <strong>tokensSkippingRequest</strong> ([':']) | requests with urls containing one or more of these chars gets ignored<br>
 </li>
@@ -195,7 +206,7 @@ cities: ['Stockholm', 'London', 'Berlin', 'New York']
 <p><a name="dynamicPayloads"></a></p>
 
 <h3>
-<a id="dynamic-payloads" class="anchor" href="#dynamic-payloads" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic payloads</h3>
+<a id="dynamic-payloads" class="anchor" href="#dynamic-payloads" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dynamic payloads</h3>
 
 <p>POSTs require a payload.</p>
 
@@ -248,7 +259,7 @@ cities: ['Stockholm', 'London', 'Berlin', 'New York']
 <p><a name="theStats"></a></p>
 
 <h3>
-<a id="the-stats" class="anchor" href="#the-stats" aria-hidden="true"><span class="octicon octicon-link"></span></a>The stats</h3>
+<a id="the-stats" class="anchor" href="#the-stats" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The stats</h3>
 
 <p>When you use hulken as a library you get callbacks with stats. This is what this stats object looks like. This object can also contain <strong>allRequests</strong> see <a href="#settings">Settings</a></p>
 
@@ -266,7 +277,7 @@ cities: ['Stockholm', 'London', 'Berlin', 'New York']
 <p><a name="commandLineTricks"></a></p>
 
 <h3>
-<a id="command-line-tricks" class="anchor" href="#command-line-tricks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Command line tricks</h3>
+<a id="command-line-tricks" class="anchor" href="#command-line-tricks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Command line tricks</h3>
 
 <p>Hulken can generate an example options file for you, all you have to do is provide the target url.</p>
 
@@ -276,7 +287,7 @@ cities: ['Stockholm', 'London', 'Berlin', 'New York']
 <p><a name="informants"></a></p>
 
 <h3>
-<a id="automatically-generate-requests-files-with-informants" class="anchor" href="#automatically-generate-requests-files-with-informants" aria-hidden="true"><span class="octicon octicon-link"></span></a>Automatically generate requests files with Informants</h3>
+<a id="automatically-generate-requests-files-with-informants" class="anchor" href="#automatically-generate-requests-files-with-informants" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Automatically generate requests files with Informants</h3>
 
 <p>an hulken_informant offers a quick and simple way to create a stress test suite by inspecting your application routes and auto generating the requests file for you!</p>
 
@@ -289,23 +300,42 @@ feel free to create a <em>hulken_informant_x</em> and send me the link</p>
 <p><a name="smashResponsibly"></a></p>
 
 <h3>
-<a id="smash-responsibly" class="anchor" href="#smash-responsibly" aria-hidden="true"><span class="octicon octicon-link"></span></a>Smash responsibly!</h3>
+<a id="smash-responsibly" class="anchor" href="#smash-responsibly" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Smash responsibly!</h3>
 
 <p>Hulken knows no limits! Be it number of agents, times to execute each request or the length of a randomly generated post value. <strong>IT IS YOUR FOOT! =)</strong> Seriously though - how could hulken enforce any reasonable limits? What is reasonable depends on the application under test and the machine executing the test.</p>
 
 <p><a name="releaseNotes"></a></p>
 
 <h3>
-<a id="release-notes" class="anchor" href="#release-notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release notes</h3>
+<a id="release-notes" class="anchor" href="#release-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Release notes</h3>
 
-<p><strong>1.0.2</strong> (non breaking changes only)</p>
+<p><strong>1.1.0</strong></p>
+
+<ul>
+<li>passing in an array of requests inline in the options file or object as requestsArray (json string) overrides requestsFilePath and the need for an external requests.json. (see updated Quick Examples - as a library)</li>
+</ul>
+
+<p><strong>1.0.4</strong></p>
+
+<ul>
+<li>fix for a bug caused by non-string payload value in the requests file (thanks to <a href="https://github.com/mhoyer">mhoyer</a>)</li>
+<li>minor fixes</li>
+</ul>
+
+<p><strong>1.0.3</strong></p>
+
+<ul>
+<li>only cleaned up some bad markdown in README.md</li>
+</ul>
+
+<p><strong>1.0.2</strong></p>
 
 <ul>
 <li>corrected old link in make_options output</li>
 <li>added new informant for hapi.js 8 to ReadMe</li>
 </ul>
 
-<p><strong>1.0.1</strong> (non breaking changes only)</p>
+<p><strong>1.0.1</strong></p>
 
 <ul>
 <li>minor fixes</li>
@@ -320,26 +350,26 @@ feel free to create a <em>hulken_informant_x</em> and send me the link</p>
 <li>added some tests</li>
 </ul>
 
-<p><strong>0.10.2</strong> (non breaking changes only)</p>
+<p><strong>0.10.2</strong></p>
 
 <ul>
 <li>removed unnecessary dependency on async</li>
 </ul>
 
-<p><strong>0.10.1</strong> (non breaking changes only)</p>
+<p><strong>0.10.1</strong></p>
 
 <ul>
 <li>minor fixes</li>
 </ul>
 
-<p><strong>0.10.0</strong> (non breaking changes only)</p>
+<p><strong>0.10.0</strong></p>
 
 <ul>
 <li>hulken can now generate random post values. (instead of {"foo" : "bar"} you do {"foo" : "::random letters 10"}. read more about it <a href="#moreOnPosts">here</a>.</li>
 <li>minor refactoring (mostly improving integration tests)</li>
 </ul>
 
-<p><strong>0.9.0</strong> (non breaking changes only)</p>
+<p><strong>0.9.0</strong></p>
 
 <ul>
 <li>set HTTP headers for every request in the test by passing in the option <code>headers : {'key1' : 'value1', 'key2' : 'value2'}</code>
@@ -347,31 +377,31 @@ feel free to create a <em>hulken_informant_x</em> and send me the link</p>
 <li>minor code refactoring</li>
 </ul>
 
-<p><strong>0.8.0</strong> (non breaking changes only)</p>
+<p><strong>0.8.0</strong></p>
 
 <ul>
 <li>pass in option <code>returnAllRequests: true</code> to include all executed requests (path and response time) in the stats object</li>
 </ul>
 
-<p><strong>0.7.4</strong> (non breaking changes only)</p>
+<p><strong>0.7.4</strong></p>
 
 <ul>
 <li>minor fixes</li>
 </ul>
 
-<p><strong>0.7.3</strong> (bug fixes)</p>
+<p><strong>0.7.3</strong></p>
 
 <ul>
 <li>fixed a bug that came with the latest refactoring</li>
 </ul>
 
-<p><strong>0.7.1</strong> (non breaking changes only)</p>
+<p><strong>0.7.1</strong></p>
 
 <ul>
 <li>code refactoring and minor fixes</li>
 </ul>
 
-<p><strong>0.7.0</strong> (non breaking changes only)</p>
+<p><strong>0.7.0</strong></p>
 
 <ul>
 <li>Hulken can now generate an example options file when executed from the command line.
@@ -382,14 +412,14 @@ an example options file with http://localhost:8080 as the targetUrl.</li>
 <p><a name="tests"></a></p>
 
 <h3>
-<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h3>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tests</h3>
 
 <p><code>npm test</code></p>
 
 <p><a name="license"></a></p>
 
 <h3>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h3>
 
 <p>Released under the MIT license. Copyright (c) 2014 Johan Hellgren.</p>
 
@@ -410,26 +440,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.</p>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/hellgrenj/hulken/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/hellgrenj/hulken/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/hellgrenj/hulken"></a> is maintained by <a href="https://github.com/hellgrenj">hellgrenj</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+      </section>
     </div>
 
-            <script type="text/javascript">
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Hulken maintained by <a href="https://github.com/hellgrenj">hellgrenj</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -439,6 +461,7 @@ THE SOFTWARE.</p>
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
+
 
   </body>
 </html>
