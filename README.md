@@ -13,9 +13,15 @@ Hulken is a stress testing tool for everything speaking HTTP. Hulken supports mu
 ```
 var hulken = require('hulken');
 
+var myArrayOfRequests = [{
+    method: 'get',
+    path: '/',
+    expectedTextToExist: 'Welcome to the landing page'
+}];
+
 var hulken_options = {  
   targetUrl: 'http://localhost:8888',  
-  requestsFilePath: './path/to/my/hulkenRequests.json'
+  requestsArray: JSON.stringify(myArrayOfRequests),
 };  
 
 hulken.run(function(stats){  
@@ -27,7 +33,7 @@ hulken.run(function(stats){
 ```
 *(you can override a lot of default settings, [see documentation](#settings))*
 
-the **requestsFilePath** points to a json file like this:
+instead of passing in the requests in requestsArray you can also set the  **requestsFilePath** (the value is the path) that points to a json file like this:
 ```
 [{
   "method":"get",
@@ -56,7 +62,7 @@ the **requestsFilePath** points to a json file like this:
 `npm install hulken -g`
 
 Create a 'options.json' file with the following content.
-the **requestsFilePath** points to the same hulkenRequests.json as in the example above (as a library). Make sure you have one!
+the **requestsFilePath** points to the same hulkenRequests.json as in the example above (as a library). If you wish you can also pass in the list of requests inline (as a valid json string, escaping your double quotes) with **requestsArray**.
 ```
 {
   "targetUrl" : "http://yourapp.com",
@@ -94,6 +100,7 @@ When you use hulken as a library you override these settings in the options obje
 * **numberOfHulkenAgents** (1) | number of agents sending requests
 * **timesToRunEachRequest** (1) | number of times to execute each request per agent  
 * **requestsFilePath** ("./hulkenRequests.json") | path to requestsFile (including file name)  
+* **requestsArray** (undefined) | an array of hulken requests as a json string (see Quick Examples - as a library). Overrides requestsFilePath if both are present.
 * **tokensSkippingRequest** ([':']) | requests with urls containing one or more of these chars gets ignored  
 * **requestsToSkip** (['/logout', 'signoff']) | requests with urls matching one of the provided urls gets ignored
 * **loginRequired** (false) | is a login required to execute the requests?
@@ -218,6 +225,9 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ### Release notes
+**1.1.0**
+* passing in an array of requests inline in the options file or object as requestsArray (json string) overrides requestsFilePath and the need for an external requests.json. (see updated Quick Examples - as a library)
+
 **1.0.4**
 * fix for a bug caused by non-string payload value in the requests file (thanks to [mhoyer](https://github.com/mhoyer))
 * minor fixes
