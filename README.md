@@ -134,7 +134,7 @@ When you use hulken as a library you override these settings in the options obje
 example:  
 12:10:37 18  
 12:10:38 28  
-12:10:39 17  *(at 12:10:39 17 requests was sent)*
+12:10:39 17  *(at 12:10:39 17 requests were sent)*
 
 <a name="dynamicPayloads"></a>
 ### Dynamic payloads
