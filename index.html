@@ -116,6 +116,11 @@ the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as 
 <p><strong>option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)</strong></p>
 
 <h2>
+<a id="sponsors" class="anchor" href="#sponsors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sponsors</h2>
+
+<p><a href="https://www.africap.se"><img src="https://www.africap.se/public/img/logo.png" alt="Africap.se logo"></a></p>
+
+<h2>
 <a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Documentation</h2>
 
 <p><a href="#settings">1.) Settings you can override through options </a><br>
@@ -200,7 +205,15 @@ the <strong>requestsFilePath</strong> points to the same hulkenRequests.json as 
 <strong>requestValueLists</strong> ({}) | insert value lists in a simple object: {
 usernames: ['john', 'jessica','admin'],
 cities: ['Stockholm', 'London', 'Berlin', 'New York']
-}</li>
+}<br>
+</li>
+<li>
+<strong>printLoadDistribution</strong> (false) | prints how the load was randomly distributed (see minWaitTime and maxWaitTime) during the test with timestamps:  <em>hh:mm:ss number of requests sent</em><br>
+example:<br>
+12:10:37 18<br>
+12:10:38 28<br>
+12:10:39 17  <em>(at 12:10:39 17 requests were sent)</em>
+</li>
 </ul>
 
 <p><a name="dynamicPayloads"></a></p>
@@ -308,6 +321,12 @@ feel free to create a <em>hulken_informant_x</em> and send me the link</p>
 
 <h3>
 <a id="release-notes" class="anchor" href="#release-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Release notes</h3>
+
+<p><strong>1.2.0</strong></p>
+
+<ul>
+<li>set <strong>printLoadDistribution: true</strong> and hulken will print how the load was randomly distributed during the test with timestamps: hh:mm:ss number of requests sent</li>
+</ul>
 
 <p><strong>1.1.0</strong></p>
 
