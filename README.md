@@ -130,7 +130,7 @@ When you use hulken as a library you override these settings in the options obje
     usernames: ['john', 'jessica','admin'],
     cities: ['Stockholm', 'London', 'Berlin', 'New York']
   }  
-**printLoadDistribution** (false) | prints how the load was randomly distributed (see minWaitTime and maxWaitTime) during the test with timestamps:  *hh:mm:ss number of requests sent*  
+* **printLoadDistribution** (false) | prints how the load was randomly distributed (see minWaitTime and maxWaitTime) during the test with timestamps:  *hh:mm:ss number of requests sent*  
 example:  
 12:10:37 18  
 12:10:38 28  
