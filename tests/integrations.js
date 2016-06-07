@@ -37,14 +37,15 @@ var runHulkenTestSuite = function() {
     requestValueLists : {
       usernames: ['john', 'jessica','admin'],
       cities: ['Stockholm', 'London', 'Berlin', 'New York']
-    }
+    },
+    printLoadDistribution : true
   };
   testStart = Date.now();
   hulken.run(function(stats) {
     //console.log(stats);
     verify(stats, hulken_options); // we do not care about the performance of our testWebServer..
   }, function(stats) {
-    //console.log(stats);
+    // console.log(stats);
     verify(stats, hulken_options);
   }, hulken_options);
 };

@@ -3,7 +3,6 @@ hulken
 
 Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool. *Hulken is swedish for The Hulk*.
 
-
 ## Quick Examples
 ### as a library:
 
@@ -78,6 +77,9 @@ hulken options.json
 ```
 **option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)**
 
+## Sponsors ##
+[![Africap.se logo](https://www.africap.se/public/img/logo.png)](https://www.africap.se)
+
 ## Documentation
 [1.) Settings you can override through options ](#settings)  
 [2.) Dynamic payloads ](#dynamicPayloads)  
@@ -127,8 +129,12 @@ When you use hulken as a library you override these settings in the options obje
 * **requestValueLists** ({}) | insert value lists in a simple object: {
     usernames: ['john', 'jessica','admin'],
     cities: ['Stockholm', 'London', 'Berlin', 'New York']
-  }
-
+  }  
+**printLoadDistribution** (false) | prints how the load was randomly distributed (see minWaitTime and maxWaitTime) during the test with timestamps:  *hh:mm:ss number of requests sent*  
+example:  
+12:10:37 18  
+12:10:38 28  
+12:10:39 17  *(at 12:10:39 17 requests was sent)*
 
 <a name="dynamicPayloads"></a>
 ### Dynamic payloads
@@ -225,6 +231,10 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ### Release notes
+**1.2.0**
+
+* set **printLoadDistribution: true** and hulken will print how the load was randomly distributed during the test with timestamps: hh:mm:ss number of requests sent
+
 **1.1.0**
 * passing in an array of requests inline in the options file or object as requestsArray (json string) overrides requestsFilePath and the need for an external requests.json. (see updated Quick Examples - as a library)
 
