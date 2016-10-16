@@ -3,6 +3,9 @@ hulken
 
 Hulken is a stress testing tool for everything speaking HTTP. Hulken supports multiple urls, GETs and POSTs, static and dynamic payloads, multiple agents and more. Hulken is highly configurable but defaults to some reasonable settings. Hulken works both as a library and a stand-alone command line tool. *Hulken is swedish for The Hulk*.
 
+## .. smash and nothing else
+Hulken is in no way a proper load test tool like LoadRunner, JMeter and such (e.g it does not try to simulate realistic user behaviours), but that's usually not what I need. I need something quick and lightweight to run early and often that helps me catch the biggest boo boo's before they see the light of day. If you have the same need I hope that Hulken can be useful to you too.
+
 ## Quick Examples
 ### as a library:
 
@@ -76,9 +79,6 @@ and then you can use the **hulken** command to run a stress test:
 hulken options.json
 ```
 **option files makes it easy to reuse requests files when targeting different environments (dev, test, staging etc..)**
-
-## Sponsors ##
-[![Africap.se logo](https://www.africap.se/public/img/logo.png)](https://www.africap.se)
 
 ## Documentation
 [1.) Settings you can override through options ](#settings)  
@@ -231,6 +231,9 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ### Release notes
+**1.2.1**
+* only improved the readme
+
 **1.2.0**
 
 * set **printLoadDistribution: true** and hulken will print how the load was randomly distributed during the test with timestamps: hh:mm:ss number of requests sent
