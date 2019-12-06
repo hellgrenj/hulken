@@ -231,6 +231,10 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ### Release notes
+**1.2.3**  
+* add property expectedStatusCode: (int value) to a requeast to override the default 
+expected status code 200.  
+Example: ``expectedStatusCode: 201``
 
 **1.2.2**  
 * only npm audit fix  

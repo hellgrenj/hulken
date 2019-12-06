@@ -9,7 +9,8 @@
 }, {
   "method": "get",
   "path": "/",
-  "expectedTextToExist": "you have reached the test startpage"
+  "expectedTextToExist": "you have reached the test startpage",
+  "expectedStatusCode": 200
 }, {
   "method": "post",
   "path": "/",
