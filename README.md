@@ -231,6 +231,10 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 
 <a name="releaseNotes"></a>
 ### Release notes
+
+**1.2.2**  
+* only npm audit fix  
+
 **1.2.1**
 * only improved the readme
 
