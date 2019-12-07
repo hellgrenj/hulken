@@ -51,6 +51,7 @@ instead of passing in the requests in requestsArray you can also set the  **requ
     "method": "post",
     "path": "/",
     "expectedTextToExist": "thank you for your POST",
+    "expectedStatusCode": 201,
     "payload": {
       "foo": "bar"
      }
@@ -232,7 +233,7 @@ Hulken knows no limits! Be it number of agents, times to execute each request or
 <a name="releaseNotes"></a>
 ### Release notes
 **1.2.3**  
-* add property expectedStatusCode: (int value) to a requeast to override the default 
+* add property expectedStatusCode: (int value) to a request to override the default 
 expected status code 200.  
 Example: ``expectedStatusCode: 201``
 
